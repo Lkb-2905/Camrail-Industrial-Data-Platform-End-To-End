@@ -12,6 +12,7 @@ def run_pipeline():
     raw_dir = os.path.join(base_dir, "data_raw")
     db_path = os.path.join(base_dir, "database", "supply_chain_dwh.sqlite")
     schema_path = os.path.join(base_dir, "sql", "schema.sql")
+    excel_report_path = os.path.join(base_dir, "reports", "rapport_supply_chain.xlsx")
     
     try:
         # 1. EXTRACT
@@ -20,8 +21,8 @@ def run_pipeline():
         # 2. TRANSFORM
         df_transac, df_stats = transform_data(api_data, erp_data)
         
-        # 3. LOAD
-        load_data(df_transac, df_stats, db_path, schema_path)
+        # 3. LOAD (SQLite + export Excel optionnel)
+        load_data(df_transac, df_stats, db_path, schema_path, export_excel_path=excel_report_path)
         
     except Exception as e:
         logger.error(f"❌ Erreur critique lors de l'exécution du pipeline: {e}")
