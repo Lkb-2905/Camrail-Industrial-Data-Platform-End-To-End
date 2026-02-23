@@ -1,8 +1,8 @@
 🌍 DOSSIER DE CONFIGURATION D'EXPLOITATION (DCE)
-# ⚡ PM-D PCR : Predictive Maintenance Dashboard (Sécurité E2E)
-![Sécurité](https://img.shields.io/badge/Plan-Continuité-red) ![Kubernetes](https://img.shields.io/badge/K8s-Resilience-blue) ![Qualité](https://img.shields.io/badge/Qualité-ISO27001-yellow)
+# ⚡ DPA PCR : Data Pipeline Automation (Sécurité E2E)
+![Sécurité](https://img.shields.io/badge/Plan-Continuité-red) ![ETL](https://img.shields.io/badge/ETL-Resilience-blue) ![Qualité](https://img.shields.io/badge/Qualité-ISO27001-yellow)
 
-**Version:** 3.0.0 Enterprise | **Date:** Février 2026  
+**Version:** 2.0.0 Enterprise | **Date:** Février 2026  
 **Auteur:** KAMENI TCHOUATCHEU GAETAN BRUNEL  
 **Contact:** gaetanbrunel.kamenitchouatcheu@et.esiea.fr  
 
@@ -21,14 +21,14 @@
 ## 🎯 VUE D'ENSEMBLE DU PROJET
 
 ### Contexte & Objectifs
-Ce document définit la stratégie complète de résilience opérationnelle et le **Plan de Continuité d'Activité (PCA)** de la flotte IoT de maintenance prédictive, s'appuyant désormais sur Kafka et Microsoft Azure. 
+Ce document définit la stratégie complète de résilience opérationnelle et le **Plan de Continuité d'Activité (PCA)** du pipeline ETL Supply Chain, incluant les flux API/JSON, CSV, Excel et le Data Warehouse SQLite.
 
 Il illustre de A à Z les compétences absolues suivantes :
 
-✅ **Auto-Healing K8s :** Les Pods d'API ML redémarrent automatiquement via Kubernetes en cas de Crash Memoire.
-✅ **Data Science Sécurisée :** L'authentification par Header (API_KEY) bloque les attaques d'inférence (Injections Pydantic).
-✅ **Automatisation Terraform :** Déploiement "Zero-Touch" en < 5min sur un Cloud vierge.
-✅ **Tolérance aux pannes (Kafka) :** Les données de télémétrie ne sont jamais perdues hors de PostgreSQL, le broker Kafka les stocke temporairement.
+✅ **Fail-Safe ETL :** Tolérance aux corruptions partielles de fichiers (CSV, JSON, Excel). Le pipeline ne plante pas en cas de source dégradée.
+✅ **Validation & Rollback :** SQLAlchemy transactions avec rollback automatique en cas d'échec de chargement.
+✅ **Multi-Source :** Fallback Excel (`extract_from_excel`) si les sources API/CSV sont indisponibles.
+✅ **Export Contrôlé :** Rapport Excel multi-feuilles généré de façon atomique dans `reports/`.
 
 ---
 
@@ -37,62 +37,87 @@ Il illustre de A à Z les compétences absolues suivantes :
 ### Flux de Données Détaillé (BIA - Business Impact Analysis)
 | Menace Identifiée | Probabilité | Impact Métier | Sévérité |
 | --- | --- | --- | --- |
-| **API ML Injoignable** | Élevée (3/5) | Load Balancer AKS reroute le trafic instantanément vers un Replica | 🟢 Mineur |
-| **Base Azure PostgreSQL Down** | Moyenne (2/5) | Kafka bufferise la donnée IoT le temps que le Failover Base s'active | 🟠 Moyen |
-| **Vol de Données MQTT/IoT** | Faible (1/5) | Attaque rejetée, absence de TLS/Client Key sur les ingress | 🔴 Critique |
-| **Data Drift (Modèle Obsolète)**| Très Faible | Alerte immédiate déclenchée par les rules SRE Prometheus | 🔴 Critique |
+| **API JSON indisponible** | Moyenne (2/5) | Utilisation de la source Excel ou CSV ERP en fallback | 🟢 Mineur |
+| **Fichier CSV/Excel corrompu** | Moyenne (2/5) | Parsing strict, skip des lignes invalides, logs détaillés | 🟠 Moyen |
+| **Base SQLite verrouillée** | Faible (1/5) | Rollback transaction, retry ou report manuel | 🟠 Moyen |
+| **Export Excel échoué** | Faible (1/5) | DWH SQLite reste intact ; export manuel possible via `excel_utils` | 🟢 Mineur |
+| **Perte du DWH** | Très faible | Reprise depuis sources brutes (data_raw, Excel) et relance `main_pipeline.py` | 🔴 Critique (PRA) |
 
 ---
 
 ## 🛠️ STACK TECHNOLOGIQUE
 
 ### Stratégies de Continuité (PCA)
-* **Failover-by-Design** : L'ingestion des paramètres températures/vibrations n'est *plus synchrone*. Si la base de données PostgreSQL subit un lock, le producteur IoT n'est pas affecté. Le système `confluent_kafka` absorbe tout dans le nuage.
+* **Transaction atomique :** Les insertions SQLite passent par SQLAlchemy avec commits/rollbacks contrôlés.
+* **Multi-source :** En cas d'indisponibilité des APIs, le pipeline peut s'alimenter depuis Excel (`extract_from_excel`) ou les fichiers CSV locaux.
+* **Export non bloquant :** L'export Excel vers `reports/rapport_supply_chain.xlsx` n'impacte pas l'intégrité du DWH en cas d'échec.
 
 ---
 
 ## 🎯 FONCTIONNALITÉS CLÉS
 
 ### 🚀 Procédures de Reprise (PRA)
-**Reprise et Cold Reboot Global via Infra-As-Code**
-En cas de cyberattaque massive compromise (Ransomware), l'entreprise ne paie pas : elle détruit tout.
-```bash
-# Depuis la CI/CD ou l'ordinateur blindé de l'architecte Cloud Azure
-terraform destroy -auto-approve
-terraform apply -auto-approve
-# Le Data Warehouse Cloud, le cluster Kubernetes et l'Ingress IA sont recréés purs.
+**Reprise après perte du Data Warehouse**
+```powershell
+# 1. Vérifier la présence des sources
+dir Data-Pipeline-Automation\data_raw
+dir exemples_excel_access\output   # Si source Excel utilisée
+
+# 2. Relancer le pipeline complet
+cd Data-Pipeline-Automation\src
+python main_pipeline.py
+
+# 3. Le DWH est recréé et l'export Excel régénéré
 ```
 
-### 🛡️ Sécurité & Robustesse Cloud
+**Export manuel en cas d'échec automatique**
+```python
+from utils.excel_utils import export_dwh_to_excel
+export_dwh_to_excel("database/supply_chain_dwh.sqlite", "reports/rapport_supply_chain.xlsx")
+```
+
+### 🛡️ Sécurité & Robustesse
 | Aspect | Implémentation |
 | --- | --- |
-| **Résilience K8s** | Liveness & Readiness Probes Kubernetes installés sur `/health` |
-| **Sécurité Payload**| Validation forte Pydantic `BaseModel` rejetant les JSON forgés (XSS, Buffer Overflows) |
+| **Validation données** | Parsing strict Pandas, vérification des types avant insert. |
+| **Résilience SQL** | Transactions SQLAlchemy, pas de SQL direct en paramètre (ORM). |
+| **Traçabilité** | Loguru logs exhaustifs (exécution, erreurs, lignes ignorées). |
+| **Sources Excel/Access** | Gestion des erreurs ODBC (pyodbc), fallback si pilote manquant. |
 
 ---
 
 ## 🚀 DÉMARRAGE RAPIDE (MODE SECOURS LOCAL)
 
-### Redémarrage de la flotte Docker locale (Mode Dégradé)
-Si le Cloud tombe, l'usine tourne en Fallback sur les boitiers serveurs locaux (Edge Computing).
+### Redémarrage du pipeline ETL (sources locales uniquement)
+Sans accès API Cloud, le pipeline s'exécute entièrement en local.
 ```powershell
-docker-compose down -v
-docker-compose up -d --build
-Write-Host "🚀 Flotte Data Streaming Fallback déployée. Brokers ZooKeeper sécurisés."
+cd Data-Pipeline-Automation\src
+python main_pipeline.py
+# Sources : data_raw/*.json, data_raw/*.csv
+# Résultat : database/supply_chain_dwh.sqlite + reports/rapport_supply_chain.xlsx
 ```
+
+### Mode fallback Excel
+Si les fichiers JSON/CSV standards sont absents ou corrompus :
+```python
+# Dans extract.py ou script custom
+from extract import extract_from_excel
+api_data, erp_data = extract_from_excel("chemin/vers/transactions.xlsx")
+# Puis transform_data() et load_data()
+```
+
+### Références visuelles
+![Exécution Pipeline ETL](../docs/screenshots/05_dpa_pipeline_execution.png)  
+![Base DWH SQLite](../docs/screenshots/06_dpa_sqlite_dwh.png)
 
 ---
 
 ## ✨ QUALITÉ & BEST PRACTICES
 
 ### Métriques d'Excellence
-✅ **Performance réseau :** Pydantic rejette directement depuis le RAM buffer l'IoC corrompue `O(1)`.
-✅ **Auditabilité :** Loguru conserve la rotation asynchrone des traces (10 MB/30 Days).
-✅ **Isolement :** Secrets injectés dans Kubernetes via Azure KeyVault/Secrets natifs, aucune donnée en dur.
-
-### Références visuelles
-![Exécution Pipeline ETL](../docs/screenshots/05_dpa_pipeline_execution.png)  
-![Base DWH SQLite](../docs/screenshots/06_dpa_sqlite_dwh.png)
+✅ **Atomicité :** Chargement DWH tout-ou-rien (rollback sur erreur).
+✅ **Auditabilité :** Loguru conserve la rotation des traces (10 MB/30 Days).
+✅ **Portabilité :** SQLite + Excel permettent un déploiement sans infrastructure Cloud.
 
 ---
 Ce projet est Confidentiel. Réservé à un usage académique et professionnel rigoureux.  

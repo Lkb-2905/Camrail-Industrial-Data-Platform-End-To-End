@@ -35,7 +35,7 @@ Il illustre les compétences suivantes :
 ✅ **Data Science Intégrée :** Moteur prédictif Scikit-Learn (Random Forest) pour la maintenance prédictive des locomotives.
 ✅ **API RESTful :** Endpoints robustes avec validation Pydantic et authentification X-API-KEY.
 ✅ **UX Moderne :** Interface de pilotage réactive (Streamlit) avec sliders et feedback temps réel.
-✅ **Industrialisation :** Plan de Continuité (PCR), documentation DCE, spécifications Power BI.
+✅ **Industrialisation :** Plan de Continuité (PCR) dans chaque sous-projet (`DOSSIER_SECURITE_CONTINUITE_PCR.md`), documentation DCE, spécifications Power BI.
 ✅ **Excel / Access :** Intégration bureautique — import Excel (source ERP), export rapports, lecture Access (voir `exemples_excel_access/`).
 ✅ **Clean Code :** Modularité, tests automatisés (Pytest), compatibilité Pydantic v1/v2.
 
@@ -53,21 +53,50 @@ Il illustre les compétences suivantes :
 ## 🏗️ ARCHITECTURE TECHNIQUE
 
 ### Diagramme de Flux
+```mermaid
+flowchart TD
+    classDef client fill:#38bdf8,stroke:#0284c7,stroke-width:2px,color:#000
+    classDef app fill:#4ade80,stroke:#16a34a,stroke-width:2px,color:#000
+    classDef intel fill:#facc15,stroke:#ca8a04,stroke-width:2px,color:#000
+    classDef data fill:#f87171,stroke:#dc2626,stroke-width:2px,color:#fff
+    classDef darkBox fill:#27272a,stroke:#52525b,stroke-width:2px,color:#fff
+
+    subgraph Client_Layer["Client Layer"]
+        O[👤 Opérateur Logistique]:::darkBox -->|Pilotage| R[Streamlit Dashboard<br>Port 8501]:::client
+    end
+
+    subgraph Application_Layer["Application Layer"]
+        N[Flask API Backend<br>Port 5000]:::app
+        S[Service Métier<br>DPA • PM-D]:::darkBox
+        R -->|HTTP GET/POST| N
+        N -->|API Request| OM
+        N -->|Fallback| SL
+        N -->|Orchestration| S
+    end
+
+    subgraph Data_Sources["Data Sources"]
+        OM[Kafka / PostgreSQL<br>API JSON Données Réelles]:::data
+        SL[Simulateur Local<br>CSV / Excel Synthétiques]:::data
+        SL -.-> OM
+    end
+
+    subgraph Intelligence_Layer["Intelligence Layer"]
+        P[Python Engine<br>Scikit-Learn Random Forest]:::intel
+    end
+
+    S -->|Shell Execution| P
+    P -->|JSON Output| S
+
+    style Client_Layer fill:#3f3f46,stroke:#52525b,color:#fff
+    style Application_Layer fill:#3f3f46,stroke:#52525b,color:#fff
+    style Data_Sources fill:#3f3f46,stroke:#52525b,color:#fff
+    style Intelligence_Layer fill:#3f3f46,stroke:#52525b,color:#fff
 ```
-┌─────────────────┐     ┌──────────────┐     ┌─────────────────┐
-│  Data Pipeline  │     │     CIDP     │     │       PM-D      │
-│   Automation    │     │  (API + UI)  │     │ (Maintenance    │
-│     (DPA)       │     │              │     │  Prédictive)    │
-└────────┬────────┘     └──────┬───────┘     └────────┬────────┘
-         │                     │                       │
-         ▼                     ▼                       ▼
-   supply_chain_dwh     models/latest.pkl        rf_failure_predict
-   (SQLite)             API Flask:5000          .joblib
-         │                     │                       │
-         └─────────────────────┴───────────────────────┘
-                              │
-                    Streamlit Dashboard :8501
-```
+
+**Résultat visuel — Captures par composant :**
+| DPA | CIDP | PM-D |
+| --- | --- | --- |
+| [Pipeline](docs/screenshots/05_dpa_pipeline_execution.png) • [DWH](docs/screenshots/06_dpa_sqlite_dwh.png) | [Vue](docs/screenshots/01_cidp_dashboard_vue_generale.png) • [Alerte](docs/screenshots/02_cidp_dashboard_alerte_danger.png) • [Dépannage](docs/screenshots/09_cidp_dashboard_error_timeout.png) | [Génération](docs/screenshots/07_pmd_generation_donnees.png) • [Training](docs/screenshots/08_pmd_model_training.png) |
 
 ### Flux de Données Détaillé
 1. **Extraction (DPA) :** Données API JSON et ERP CSV → transformation Pandas → chargement SQLite.
@@ -168,7 +197,7 @@ streamlit run dashboard/app.py
 cd Data-Pipeline-Automation\src
 python main_pipeline.py
 ```
-**Résultat :** `database/supply_chain_dwh.sqlite`
+**Résultat :** `database/supply_chain_dwh.sqlite` + `reports/rapport_supply_chain.xlsx`. Voir `exemples_excel_access/` pour Excel/Access.
 
 ### Predictive Maintenance Dashboard (PM-D)
 ```powershell
@@ -199,12 +228,12 @@ Voir **[DEMARRAGE_RAPIDE.md](DEMARRAGE_RAPIDE.md)** pour les détails.
 1. **Connexion :** Lancez l'API puis le Dashboard Streamlit.
 2. **Supervision :** Observez les sliders. Valeurs nominales (Débit 500, Pression 5, Vibrations 2, Température 45) → "OPÉRATION NOMINALE".
 3. **Anticipation :** Augmentez Vibrations (7+) et Température (85+) → "DANGER DÉTECTÉ".
-4. **Action :** Exportez les données DWH ou connectez Power BI (voir `POWER_BI_SPECS.md`).
+4. **Action :** Exportez les données DWH (Excel automatique dans `reports/`) ou connectez Power BI (voir `POWER_BI_SPECS.md`).
 
 ### Captures d'Écran
-| Vue Globale | Cas Alerte | Dépannage |
+| DPA | CIDP | PM-D |
 | --- | --- | --- |
-| [01_vue_generale](docs/screenshots/01_cidp_dashboard_vue_generale.png) | [02_alerte](docs/screenshots/02_cidp_dashboard_alerte_danger.png) | [09_timeout](docs/screenshots/09_cidp_dashboard_error_timeout.png) |
+| [Pipeline](docs/screenshots/05_dpa_pipeline_execution.png) • [DWH](docs/screenshots/06_dpa_sqlite_dwh.png) | [Vue](docs/screenshots/01_cidp_dashboard_vue_generale.png) • [Alerte](docs/screenshots/02_cidp_dashboard_alerte_danger.png) • [Timeout](docs/screenshots/09_cidp_dashboard_error_timeout.png) | [Génération](docs/screenshots/07_pmd_generation_donnees.png) • [Training](docs/screenshots/08_pmd_model_training.png) |
 
 ---
 

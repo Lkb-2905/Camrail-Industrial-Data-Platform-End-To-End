@@ -53,45 +53,48 @@ Il illustre les compétences suivantes :
 ### Diagramme de Flux (Vue Logique & ML Ops)
 ```mermaid
 flowchart TD
-    %% Styling
     classDef client fill:#38bdf8,stroke:#0284c7,stroke-width:2px,color:#000
     classDef app fill:#4ade80,stroke:#16a34a,stroke-width:2px,color:#000
     classDef intel fill:#facc15,stroke:#ca8a04,stroke-width:2px,color:#000
     classDef data fill:#f87171,stroke:#dc2626,stroke-width:2px,color:#fff
     classDef darkBox fill:#27272a,stroke:#52525b,stroke-width:2px,color:#fff
 
-    subgraph Client Layer
-        O[👤 Analyste Maintenance]:::darkBox -->|Supervision| R[Power BI Dashboard<br>Monitoring Executif]:::client
+    subgraph Client_Layer["Client Layer"]
+        O[👤 Analyste Maintenance]:::darkBox -->|Pilotage| R[Power BI Dashboard<br>Monitoring Executif]:::client
     end
 
-    subgraph Application Layer
+    subgraph Application_Layer["Application Layer"]
         N[Python Data Processing<br>data_processing.py]:::app
-        S[Feature Engineering & Scaling]:::darkBox
-        N -->|Transformation| S
+        S[Feature Engineering<br>& Scaling]:::darkBox
+        R -->|Requête Dashboard| S
+        N -->|API Request| OM
+        N -->|Fallback| SL
+        N -->|Orchestration| S
     end
 
-    subgraph Data Sources
+    subgraph Data_Sources["Data Sources"]
         OM[Kafka / Azure IoT<br>Télémétrie Cloud]:::data
-        SL[Générateur Local<br>data_generator.py]:::darkBox
+        SL[Générateur Local<br>data_generator.py]:::data
+        SL -.-> OM
     end
 
-    subgraph Intelligence Layer
-        P[Modélisation ML Random Forest<br>model_training.py]:::intel
+    subgraph Intelligence_Layer["Intelligence Layer"]
+        P[Python Engine<br>Random Forest Scikit-Learn]:::intel
     end
 
-    %% Connections
-    R -->|Requête Dashboard| OM
-    N -.->|Extract Cloud| OM
-    N -->|Extract Local| SL
-    S -->|Données Propres ML| P
-    P -->|Génération Modèle (.joblib)| S
+    S -->|Shell Execution| P
+    P -->|JSON Output| S
 
-    %% Custom styles for Subgraphs
-    style Client Layer fill:#3f3f46,stroke:#52525b,color:#fff
-    style Application Layer fill:#3f3f46,stroke:#52525b,color:#fff
-    style Data Sources fill:#3f3f46,stroke:#52525b,color:#fff
-    style Intelligence Layer fill:#3f3f46,stroke:#52525b,color:#fff
+    style Client_Layer fill:#3f3f46,stroke:#52525b,color:#fff
+    style Application_Layer fill:#3f3f46,stroke:#52525b,color:#fff
+    style Data_Sources fill:#3f3f46,stroke:#52525b,color:#fff
+    style Intelligence_Layer fill:#3f3f46,stroke:#52525b,color:#fff
 ```
+
+**Résultat visuel — Workflow ML :**
+| Génération données | Entraînement modèle |
+| --- | --- |
+| [07_generation](../docs/screenshots/07_pmd_generation_donnees.png) | [08_training](../docs/screenshots/08_pmd_model_training.png) |
 
 ### Architecture Infra (Cloud)
 ```mermaid
@@ -222,7 +225,7 @@ python data_generator.py      # Génère raw_telemetry.csv
 python data_processing.py     # Crée processed_telemetry.csv
 python model_training.py      # Entraîne et sauvegarde rf_failure_predict.joblib
 ```
-**Accès Immédiat :** Le modèle `rf_failure_predict.joblib` et les CSV traités sont générés instantanément.
+**Accès Immédiat :** Le modèle `rf_failure_predict.joblib` et les CSV traités sont générés instantanément. Intégration possible avec CIDP (API ML) et Power BI.
 
 ---
 
@@ -234,16 +237,12 @@ python model_training.py      # Entraîne et sauvegarde rf_failure_predict.jobli
 3. **Action :** Exporter le rapport vers le département maintenance technique (cf. `POWER_BI_SPECS.md`).
 
 ### Captures d'Écran
-**📸 Résultat de l'exécution (Local)**  
-![Exécution Local](execution_screenshot.png)
+| Vue | Description | Capture |
+| --- | --- | --- |
+| **Génération** | data_generator / data_processing | ![07](../docs/screenshots/07_pmd_generation_donnees.png) |
+| **Entraînement** | model_training — classification report, accuracy | ![08](../docs/screenshots/08_pmd_model_training.png) |
 
-**📸 Génération et traitement des données**  
-![Génération des données](../docs/screenshots/07_pmd_generation_donnees.png)
-
-**📸 Entraînement du modèle ML**  
-![Entraînement du modèle](../docs/screenshots/08_pmd_model_training.png)
-
-> 💡 Convention de nommage : voir `../docs/screenshots/README.md`
+> 💡 Captures dans `docs/screenshots/` — Convention : voir `../docs/screenshots/README.md`
 
 ---
 
@@ -267,7 +266,8 @@ python model_training.py      # Entraîne et sauvegarde rf_failure_predict.jobli
 * CI/CD Intégral : Déploiement Azure Kubernetes Service via Azure Pipelines.
 * Infrastructure As Code via Terraform.
 * Simulation télémétrique via Azure Event Hubs (Kafka).
-* Moteur IA PySpark/Scikit-Learn (Random Forest) couplé à PostgreSQL.
+* Moteur IA Scikit-Learn (Random Forest) couplé à PostgreSQL.
+* Mode local : Workflow complet (data_generator → data_processing → model_training) sans Cloud.
 * Alerting et Observabilité Grafana SRE (Metrics Prometheus).
 
 **Version 3.0.0 (Vision Long Terme) 🔮**

@@ -52,46 +52,48 @@ Il illustre les compétences suivantes :
 ### Diagramme de Flux (Vue Logique & ETL Local)
 ```mermaid
 flowchart TD
-    %% Styling
     classDef client fill:#38bdf8,stroke:#0284c7,stroke-width:2px,color:#000
     classDef app fill:#4ade80,stroke:#16a34a,stroke-width:2px,color:#000
     classDef intel fill:#facc15,stroke:#ca8a04,stroke-width:2px,color:#000
     classDef data fill:#f87171,stroke:#dc2626,stroke-width:2px,color:#fff
     classDef darkBox fill:#27272a,stroke:#52525b,stroke-width:2px,color:#fff
 
-    subgraph Client Layer
-        O[👤 Opérateur Logistique]:::darkBox -->|Pilotage| R[Dashboard BI / DBeaver<br>SQL Analytics]:::client
+    subgraph Client_Layer["Client Layer"]
+        O[👤 Décideur Supply Chain]:::darkBox -->|Pilotage| R[Dashboard BI / DBeaver<br>SQL Analytics]:::client
     end
 
-    subgraph Application Layer
+    subgraph Application_Layer["Application Layer"]
         N[Python ETL Pipeline<br>main_pipeline.py]:::app
-        S[Data Warehouse<br>SQLite / SQlAlchemy]:::darkBox
+        S[Data Warehouse<br>SQLite / SQLAlchemy]:::darkBox
+        R -->|Requêtes SQL| S
+        N -->|API Request| OM
+        N -->|Fallback| SL
         N -->|Orchestration| S
     end
 
-    subgraph Data Sources
-        OM[Kafka / Azure SQL<br>Données Cloud]:::data
-        SL[Sources Locales<br>CSVs / JSONs / Excel]:::darkBox
+    subgraph Data_Sources["Data Sources"]
+        OM[Kafka / API JSON<br>Données Cloud]:::data
+        SL[Sources Locales<br>CSVs / JSONs / Excel]:::data
+        SL -.-> OM
     end
 
-    subgraph Intelligence Layer
+    subgraph Intelligence_Layer["Intelligence Layer"]
         P[Python Transform<br>Pandas Analytics]:::intel
     end
 
-    %% Connections
-    R -->|Requêtes SQL| S
-    N -.->|Extract Cloud| OM
-    N -->|Extract Local| SL
-    N -->|Transformation| P
-    P -->|Dataframes Propres| N
-    N -->|Load (SQL Insert)| S
+    N -->|Shell Execution| P
+    P -->|Data Output| N
 
-    %% Custom styles for Subgraphs
-    style Client Layer fill:#3f3f46,stroke:#52525b,color:#fff
-    style Application Layer fill:#3f3f46,stroke:#52525b,color:#fff
-    style Data Sources fill:#3f3f46,stroke:#52525b,color:#fff
-    style Intelligence Layer fill:#3f3f46,stroke:#52525b,color:#fff
+    style Client_Layer fill:#3f3f46,stroke:#52525b,color:#fff
+    style Application_Layer fill:#3f3f46,stroke:#52525b,color:#fff
+    style Data_Sources fill:#3f3f46,stroke:#52525b,color:#fff
+    style Intelligence_Layer fill:#3f3f46,stroke:#52525b,color:#fff
 ```
+
+**Résultat visuel — Pipeline et DWH :**
+| Exécution ETL | Base DWH SQLite |
+| --- | --- |
+| [05_pipeline](../docs/screenshots/05_dpa_pipeline_execution.png) | [06_dwh](../docs/screenshots/06_dpa_sqlite_dwh.png) |
 
 ### Architecture Infra (Cloud)
 ```mermaid
@@ -188,6 +190,11 @@ graph TD
 **Système Avancé de Requêtage**
 * Déploiement de scripts SQL analytiques poussés pour catégoriser la fiabilité du système (Hub Logistics Classification).
 
+**Intégration Excel / Access**
+* **Source Excel :** Lecture de fichiers Excel comme alternative au CSV ERP via `extract_from_excel()`.
+* **Export automatique :** Rapport multi-feuilles vers `reports/rapport_supply_chain.xlsx` à chaque exécution.
+* **Access :** Export pour import Access (migration métier). Voir `exemples_excel_access/` pour les cas d'usage complets.
+
 **Gestion des Risques**
 * Tolérance du Pipeline en mode fail-safe sur corruption partielle de fichier.
 
@@ -217,7 +224,9 @@ pip install -r requirements.txt
 cd src
 python main_pipeline.py
 ```
-**Accès Immédiat :** Les tables historiques sont fraîches et disponibles instantanément dans `database/supply_chain_dwh.sqlite`.
+**Accès Immédiat :** Les tables historiques sont fraîches et disponibles instantanément dans `database/supply_chain_dwh.sqlite`. L'export Excel est généré automatiquement dans `reports/rapport_supply_chain.xlsx`.
+
+> 💡 **Excel / Access :** Exemples et cas d'usage dans `../exemples_excel_access/`.
 
 ---
 
@@ -229,16 +238,12 @@ python main_pipeline.py
 3. **Action:** Construction de Dashboard et exports métier sur l'activité des "Gares".
 
 ### Captures d'Écran
-**📸 Résultat de l'exécution (Local)**  
-![Exécution Local](execution_screenshot.png)
+| Vue | Description | Capture |
+| --- | --- | --- |
+| **Exécution Pipeline** | Logs Extract / Transform / Load | ![05](../docs/screenshots/05_dpa_pipeline_execution.png) |
+| **Base DWH** | supply_chain_dwh.sqlite (DBeaver) | ![06](../docs/screenshots/06_dpa_sqlite_dwh.png) |
 
-**📸 Exécution du Pipeline ETL**  
-![Exécution du Pipeline ETL](../docs/screenshots/05_dpa_pipeline_execution.png)
-
-**📸 Base de données DWH SQLite**  
-![Base SQLite Supply Chain](../docs/screenshots/06_dpa_sqlite_dwh.png)
-
-> 💡 Convention de nommage : voir `../docs/screenshots/README.md`
+> 💡 Captures dans `docs/screenshots/` — Convention : voir `../docs/screenshots/README.md`
 
 ---
 
@@ -261,6 +266,7 @@ python main_pipeline.py
 * Architecture Data Streaming en Event-Driven via Apache Kafka.
 * Virtualisation Globale : Orchestration via Docker Compose complet.
 * Base de Données : Connecteur vers Cloud Azure PostgreSQL et Prometheus SRE.
+* **Intégration Excel/Access :** Source Excel, export automatique vers `reports/rapport_supply_chain.xlsx`, exemples dans `exemples_excel_access/`.
 * Documentation exhaustive DCE.
 
 **Version 3.0.0 (Vision Long Terme) 🔮**

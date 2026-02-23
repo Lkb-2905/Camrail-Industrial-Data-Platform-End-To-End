@@ -54,45 +54,48 @@ Il illustre de A à Z les compétences absolues suivantes :
 ### Diagramme de Flux (Vue Logique & Local)
 ```mermaid
 flowchart TD
-    %% Styling
     classDef client fill:#38bdf8,stroke:#0284c7,stroke-width:2px,color:#000
     classDef app fill:#4ade80,stroke:#16a34a,stroke-width:2px,color:#000
     classDef intel fill:#facc15,stroke:#ca8a04,stroke-width:2px,color:#000
     classDef data fill:#f87171,stroke:#dc2626,stroke-width:2px,color:#fff
     classDef darkBox fill:#27272a,stroke:#52525b,stroke-width:2px,color:#fff
 
-    subgraph Client Layer
+    subgraph Client_Layer["Client Layer"]
         O[👤 Opérateur Logistique]:::darkBox -->|Pilotage| R[Streamlit Dashboard<br>Port 8501]:::client
     end
 
-    subgraph Application Layer
+    subgraph Application_Layer["Application Layer"]
         N[Flask API Backend<br>Port 5000]:::app
         S[Service Métier]:::darkBox
+        R -->|HTTP GET/POST| N
+        N -->|API Request| SL
+        N -->|Fallback| OM
         N -->|Orchestration| S
     end
 
-    subgraph Data Sources
+    subgraph Data_Sources["Data Sources"]
         OM[Kafka / PostgreSQL<br>Données Réelles]:::data
-        SL[Simulateur Local<br>Données Synthétiques]:::darkBox
+        SL[Simulateur Local<br>Données Synthétiques]:::data
+        SL -.-> OM
     end
 
-    subgraph Intelligence Layer
+    subgraph Intelligence_Layer["Intelligence Layer"]
         P[Python Engine<br>Scikit-Learn]:::intel
     end
 
-    %% Connections
-    R -->|HTTP GET/POST| N
-    N -.->|API Request| OM
-    N -->|Fallback| SL
-    S -->|Shell / API Execution| P
+    S -->|Shell Execution| P
     P -->|JSON Output| S
 
-    %% Custom styles for Subgraphs
-    style Client Layer fill:#3f3f46,stroke:#52525b,color:#fff
-    style Application Layer fill:#3f3f46,stroke:#52525b,color:#fff
-    style Data Sources fill:#3f3f46,stroke:#52525b,color:#fff
-    style Intelligence Layer fill:#3f3f46,stroke:#52525b,color:#fff
+    style Client_Layer fill:#3f3f46,stroke:#52525b,color:#fff
+    style Application_Layer fill:#3f3f46,stroke:#52525b,color:#fff
+    style Data_Sources fill:#3f3f46,stroke:#52525b,color:#fff
+    style Intelligence_Layer fill:#3f3f46,stroke:#52525b,color:#fff
 ```
+
+**Résultat visuel — Dashboard en action :**
+| Vue générale | Cas alerte | Dépannage |
+| --- | --- | --- |
+| [01_vue_generale](../docs/screenshots/01_cidp_dashboard_vue_generale.png) | [02_alerte_danger](../docs/screenshots/02_cidp_dashboard_alerte_danger.png) | [09_timeout](../docs/screenshots/09_cidp_dashboard_error_timeout.png) |
 
 ### Architecture Infra (Cloud)
 
@@ -247,7 +250,7 @@ streamlit run dashboard/app.py
 
 **Accès Immédiat :**
 * API : **http://127.0.0.1:5000** (GET `/health`, POST `/predict` avec header `X-API-KEY: entreprise_secret_key_2026`)
-* Dashboard : **http://localhost:8501** — Camrail Live Monitor
+* Dashboard : **http://localhost:8501** — Camrail Live Monitor (la clé API est transmise automatiquement par le Dashboard)
 
 ### Lancement Mode Complet (PostgreSQL + Kafka)
 ```bash
@@ -264,22 +267,14 @@ python run_platform.py
 3. **Démo Recruteur :** Lancer l'API + Dashboard, afficher le cas nominal (Vibration 2, Température 45), puis simuler une alerte (Vibration 7+, Température 85+) et montrer le message "DANGER DÉTECTÉ".
 
 ### Captures d'Écran
-**📸 Résultat de l'exécution (Local)**  
-![Exécution Local](execution_screenshot.png)
+| Vue | Description | Capture |
+| --- | --- | --- |
+| **Vue générale** | Dashboard nominal — OPÉRATION NOMINALE | ![01](../docs/screenshots/01_cidp_dashboard_vue_generale.png) |
+| **Cas alerte** | DANGER DÉTECTÉ (bannière rouge) | ![02](../docs/screenshots/02_cidp_dashboard_alerte_danger.png) |
+| **Bootstrap + API** | Terminal : démarrage bootstrap et API Flask | ![04](../docs/screenshots/04_cidp_bootstrap_api_demarrage.png) |
+| **Dépannage** | Erreur ReadTimeout si API non démarrée | ![09](../docs/screenshots/09_cidp_dashboard_error_timeout.png) |
 
-**📸 Dashboard Streamlit — Vue générale**  
-![Camrail Live Monitor](../docs/screenshots/01_cidp_dashboard_vue_generale.png)
-
-**📸 Cas nominal — Opération normale**  
-![Opération nominale](../docs/screenshots/01_cidp_dashboard_vue_generale.png)
-
-**📸 Cas alerte — Danger détecté**  
-![Alerte danger](../docs/screenshots/02_cidp_dashboard_alerte_danger.png)
-
-**📸 Bootstrap et démarrage API**  
-![Bootstrap et API](../docs/screenshots/04_cidp_bootstrap_api_demarrage.png)
-
-> 💡 Convention de nommage des captures : voir `../docs/screenshots/README.md`
+> 💡 Captures dans `docs/screenshots/` — Convention : voir `../docs/screenshots/README.md`
 
 ---
 

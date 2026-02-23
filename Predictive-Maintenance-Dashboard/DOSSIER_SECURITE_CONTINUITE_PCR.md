@@ -26,7 +26,7 @@ Ce document définit la stratégie complète de résilience opérationnelle et l
 Il illustre de A à Z les compétences absolues suivantes :
 
 ✅ **Auto-Healing K8s :** Les Pods d'API ML redémarrent automatiquement via Kubernetes en cas de Crash Memoire.
-✅ **Data Science Sécurisée :** L'authentification par Header (API_KEY) bloque les attaques d'inférence (Injections Pydantic).
+✅ **Data Science Sécurisée :** L'authentification par Header `X-API-KEY` bloque les attaques d'inférence. Validation Pydantic rejette les payloads forgés.
 ✅ **Automatisation Terraform :** Déploiement "Zero-Touch" en < 5min sur un Cloud vierge.
 ✅ **Tolérance aux pannes (Kafka) :** Les données de télémétrie ne sont jamais perdues hors de PostgreSQL, le broker Kafka les stocke temporairement.
 
@@ -73,13 +73,27 @@ terraform apply -auto-approve
 
 ## 🚀 DÉMARRAGE RAPIDE (MODE SECOURS LOCAL)
 
+### Mode local (scripts Python) — Sans Cloud/K8s
+En absence d'infrastructure Cloud (Kafka, Azure, AKS), le workflow ML s'exécute entièrement en local.
+```powershell
+cd Predictive-Maintenance-Dashboard\src
+python data_generator.py      # Génère raw_telemetry.csv
+python data_processing.py     # Crée processed_telemetry.csv
+python model_training.py      # Entraîne et sauvegarde rf_failure_predict.joblib
+```
+**Résultat :** Modèle `rf_failure_predict.joblib` et CSV traités disponibles pour Power BI ou intégration CIDP.
+
 ### Redémarrage de la flotte Docker locale (Mode Dégradé)
-Si le Cloud tombe, l'usine tourne en Fallback sur les boitiers serveurs locaux (Edge Computing).
+Si le Cloud tombe et que Docker est déployé, l'usine tourne en Fallback sur les boitiers serveurs locaux.
 ```powershell
 docker-compose down -v
 docker-compose up -d --build
 Write-Host "🚀 Flotte Data Streaming Fallback déployée. Brokers ZooKeeper sécurisés."
 ```
+
+### Références visuelles
+![Génération données](../docs/screenshots/07_pmd_generation_donnees.png)  
+![Entraînement modèle ML](../docs/screenshots/08_pmd_model_training.png)
 
 ---
 

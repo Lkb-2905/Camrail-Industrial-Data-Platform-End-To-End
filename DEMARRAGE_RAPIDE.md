@@ -18,7 +18,7 @@ cd "Data-Pipeline-Automation\src"
 python main_pipeline.py
 ```
 
-**Résultat :** Base SQLite créée dans `database/supply_chain_dwh.sqlite`
+**Résultat :** Base SQLite créée dans `database/supply_chain_dwh.sqlite` et export Excel dans `reports/rapport_supply_chain.xlsx`
 
 ---
 

@@ -26,7 +26,7 @@ Ce document définit la stratégie complète de résilience opérationnelle et l
 Il illustre de A à Z les compétences absolues suivantes :
 
 ✅ **Auto-Healing K8s :** Les Pods d'API ML redémarrent automatiquement via Kubernetes en cas de Crash Memoire.
-✅ **Data Science Sécurisée :** L'authentification par Header (X-API-KEY) bloque les attaques d'inférence. Le Dashboard Streamlit transmet automatiquement la clé API à l'endpoint `/predict`. Validation Pydantic (v1/v2) rejette les payloads forgés.
+✅ **Data Science Sécurisée :** L'authentification par Header `X-API-KEY` bloque les attaques d'inférence. Le Dashboard Streamlit transmet automatiquement la clé API à l'endpoint `/predict`. Validation Pydantic (v1/v2) rejette les payloads forgés.
 ✅ **Automatisation Terraform :** Déploiement "Zero-Touch" en < 5min sur un Cloud vierge.
 ✅ **Tolérance aux pannes (Kafka) :** Les données de télémétrie ne sont jamais perdues hors de PostgreSQL, le broker Kafka les stocke temporairement.
 
@@ -73,15 +73,17 @@ terraform apply -auto-approve
 
 ## 🚀 DÉMARRAGE RAPIDE (MODE SECOURS LOCAL)
 
-### Mode Bootstrap (sans PostgreSQL/Kafka)
-En absence d'infrastructure Cloud, le script `bootstrap_local.py` entraîne le modèle depuis les CSV locaux et génère `models/latest.pkl`. L'API Flask et le Dashboard Streamlit fonctionnent alors en autonomie.
+### Mode Bootstrap (sans PostgreSQL/Kafka) — Recommandé pour démo
+En absence d'infrastructure Cloud, le script `bootstrap_local.py` entraîne le modèle depuis les CSV locaux (`data/sensors.csv`, `data/maintenance.csv`) et génère `models/latest.pkl`. L'API Flask et le Dashboard Streamlit fonctionnent alors en autonomie totale.
 ```powershell
 cd Camrail-Industrial-Data-Platform
 $env:PYTHONPATH = (Get-Location).Path
 python bootstrap_local.py
 python api/api.py
-# Terminal 2 : streamlit run dashboard/app.py
+# Terminal 2 :
+streamlit run dashboard/app.py
 ```
+**Accès :** API `http://127.0.0.1:5000` | Dashboard `http://localhost:8501` (X-API-KEY transmise automatiquement).
 
 ### Redémarrage de la flotte Docker locale (Mode Dégradé)
 Si le Cloud tombe, l'usine tourne en Fallback sur les boitiers serveurs locaux (Edge Computing).
