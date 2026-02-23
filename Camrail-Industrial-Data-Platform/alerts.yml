@@ -1,0 +1,20 @@
+groups:
+  - name: ML_System_Alerts
+    rules:
+      - alert: HighPredictionLatency
+        expr: rate(api_prediction_latency_seconds_sum[5m]) / rate(api_prediction_latency_seconds_count[5m]) > 2
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Machine Learning API est trop lente on {{ $labels.instance }}"
+          description: "La latence d'inférence dépasse 2 secondes en moyenne depuis 1 minute."
+          
+      - alert: HighAnomalyDetection
+        expr: rate(api_risk_alerts_total[5m]) > 10
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Un nombre anormalement haut d'alertes IA est détecté"
+          description: "Le modèle Random Forest prédit une vague de casse majeure (Data Drift potentiel)."

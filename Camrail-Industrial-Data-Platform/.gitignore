@@ -1,0 +1,14 @@
+.venv/
+env/
+__pycache__/
+*.pyc
+
+# Logs & Data Warehouse
+logs/
+*.log
+data/*.db
+data/*.sqlite
+data/*.joblib
+
+# OS generated
+.DS_Store

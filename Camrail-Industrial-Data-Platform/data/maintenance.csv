@@ -1,0 +1,4 @@
+loco_id,last_maintenance,failure_type,status
+LOCO_001,2026-01-15,None,Active
+LOCO_002,2025-11-20,Hydraulic Leak,Active
+LOCO_003,2026-02-10,Overheating,Under Repair

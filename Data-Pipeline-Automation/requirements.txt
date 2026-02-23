@@ -1,0 +1,4 @@
+pandas==2.2.2
+numpy==1.26.4
+sqlalchemy>=2.0.21
+loguru>=0.7.2

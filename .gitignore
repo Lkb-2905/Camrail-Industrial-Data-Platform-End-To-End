@@ -1,0 +1,44 @@
+# Python
+.venv/
+venv/
+env/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+.eggs/
+dist/
+build/
+
+# Modèles et données générés
+*.pkl
+*.joblib
+*.sqlite
+*.db
+**/data/processed_telemetry.csv
+**/data/raw_telemetry.csv
+logs/
+*.log
+
+# Données sensibles
+.env
+.env.local
+*.key
+
+# IDE / éditeurs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Tests / cache
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# OS
+.DS_Store
+Thumbs.db

@@ -1,0 +1,16 @@
+# Configuration centralisée de la Data Platform
+data:
+  raw_sensors: "data/sensors.csv"
+  raw_maintenance: "data/maintenance.csv"
+database:
+  db_name: "camrail_dwh"
+model:
+  registry_dir: "models"
+  latest_name: "latest.pkl"
+api:
+  host: "127.0.0.1"
+  port: 5000
+kafka:
+  topic: "train_telemetry"
+dashboard:
+  mock_loco_id: "LOCO_001"
