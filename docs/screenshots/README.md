@@ -2,11 +2,22 @@
 
 ## Fichiers présents (analyse à jour)
 
+### Power BI — Dashboards Analytiques (README racine)
+
 | Fichier | Contenu | Projet |
 |---------|---------|--------|
-| `01_cidp_dashboard_vue_generale.png` | **Vue générale / Cas nominal** — LOCO_003, Débit 200, Pression 1.17, Vibrations 1.30, Température 28.33. Message : **OPÉRATION NOMINALE** (barre verte). Taux fiabilité 63 %. | CIDP |
-| `02_cidp_dashboard_alerte_danger.png` | **Cas alerte** — LOCO_003, Vibrations 12.91, Température 114.5. Message : **DANGER DÉTECTÉ** (bannière rouge). Taux fiabilité 33 %. | CIDP |
-| `09_cidp_dashboard_error_timeout.png` | **Dépannage** — Erreur ReadTimeout (API non démarrée). Valeurs config : Vibr. 4.64, Temp. 89. Vérifier que l'API Flask tourne sur le port 5000. | CIDP |
+| `10_powerbi_executive_summary.png` | **Synthèse des Opérations** — KPIs (Taux Erreur, Total Errors, Machines Actives, Total Transactions, Total Volume), courbe Volume par Jour, donut par status_code, barres Errors par machine_id. | Power BI |
+| `11_powerbi_fiabilite_pipeline.png` | **Fiabilité du Pipeline** — Flux transactions (Total → status_code → machine_id), jauge Taux Erreur. Vue Data Quality. | Power BI |
+| `12_powerbi_performance_parc.png` | **Performance du Parc** — Tableau machine_id × Volume/Errors/Taux Erreur (formatage conditionnel), nuage de points Volume vs Taux Erreur. | Power BI |
+| `13_powerbi_analyse_shifts.png` | **Analyse Temporelle & Shifts** — Errors et Volume par Heure_Transaction, heatmap Jour_Semaine × Heure. | Power BI |
+
+### CIDP — Dashboard Streamlit
+
+| Fichier | Contenu | Projet |
+|---------|---------|--------|
+| `01_cidp_dashboard_vue_generale.png` | **Vue générale / Cas nominal** — OPÉRATION NOMINALE. | CIDP |
+| `02_cidp_dashboard_alerte_danger.png` | **Cas alerte** — DANGER DÉTECTÉ (bannière rouge). | CIDP |
+| `09_cidp_dashboard_error_timeout.png` | **Dépannage** — Erreur ReadTimeout (API non démarrée). | CIDP |
 
 ## Convention pour captures supplémentaires
 

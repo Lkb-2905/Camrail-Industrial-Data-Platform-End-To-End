@@ -1,102 +1,102 @@
 [
     {
         "machine_id":"MCH-001",
+        "site_location":"Yaound\u00e9",
+        "installation_year":2013
+    },
+    {
+        "machine_id":"MCH-002",
+        "site_location":"Ngaound\u00e9r\u00e9",
+        "installation_year":2018
+    },
+    {
+        "machine_id":"MCH-003",
+        "site_location":"B\u00e9labo",
+        "installation_year":2013
+    },
+    {
+        "machine_id":"MCH-004",
+        "site_location":"Douala",
+        "installation_year":2015
+    },
+    {
+        "machine_id":"MCH-005",
+        "site_location":"Ed\u00e9a",
+        "installation_year":2021
+    },
+    {
+        "machine_id":"MCH-006",
         "site_location":"B\u00e9labo",
         "installation_year":2020
     },
     {
-        "machine_id":"MCH-002",
-        "site_location":"Douala",
-        "installation_year":2019
-    },
-    {
-        "machine_id":"MCH-003",
-        "site_location":"Ngaound\u00e9r\u00e9",
-        "installation_year":2011
-    },
-    {
-        "machine_id":"MCH-004",
-        "site_location":"Yaound\u00e9",
-        "installation_year":2020
-    },
-    {
-        "machine_id":"MCH-005",
-        "site_location":"Ngaound\u00e9r\u00e9",
-        "installation_year":2012
-    },
-    {
-        "machine_id":"MCH-006",
-        "site_location":"Douala",
-        "installation_year":2013
-    },
-    {
         "machine_id":"MCH-007",
-        "site_location":"Ngaound\u00e9r\u00e9",
-        "installation_year":2015
+        "site_location":"B\u00e9labo",
+        "installation_year":2021
     },
     {
         "machine_id":"MCH-008",
         "site_location":"B\u00e9labo",
-        "installation_year":2012
+        "installation_year":2018
     },
     {
         "machine_id":"MCH-009",
         "site_location":"Douala",
-        "installation_year":2012
+        "installation_year":2014
     },
     {
         "machine_id":"MCH-010",
-        "site_location":"Douala",
-        "installation_year":2020
+        "site_location":"Ed\u00e9a",
+        "installation_year":2019
     },
     {
         "machine_id":"MCH-011",
         "site_location":"Yaound\u00e9",
-        "installation_year":2013
+        "installation_year":2018
     },
     {
         "machine_id":"MCH-012",
-        "site_location":"B\u00e9labo",
-        "installation_year":2019
+        "site_location":"Ed\u00e9a",
+        "installation_year":2010
     },
     {
         "machine_id":"MCH-013",
         "site_location":"Ngaound\u00e9r\u00e9",
-        "installation_year":2022
+        "installation_year":2010
     },
     {
         "machine_id":"MCH-014",
         "site_location":"Ngaound\u00e9r\u00e9",
-        "installation_year":2021
+        "installation_year":2015
     },
     {
         "machine_id":"MCH-015",
-        "site_location":"Douala",
+        "site_location":"B\u00e9labo",
         "installation_year":2015
     },
     {
         "machine_id":"MCH-016",
-        "site_location":"Ngaound\u00e9r\u00e9",
-        "installation_year":2010
+        "site_location":"Yaound\u00e9",
+        "installation_year":2015
     },
     {
         "machine_id":"MCH-017",
-        "site_location":"Ngaound\u00e9r\u00e9",
+        "site_location":"B\u00e9labo",
         "installation_year":2017
     },
     {
         "machine_id":"MCH-018",
-        "site_location":"Ed\u00e9a",
+        "site_location":"B\u00e9labo",
         "installation_year":2021
     },
     {
         "machine_id":"MCH-019",
         "site_location":"Yaound\u00e9",
-        "installation_year":2011
+        "installation_year":2016
     },
     {
         "machine_id":"MCH-020",
-        "site_location":"Douala",
-        "installation_year":2015
+        "site_location":"Ed\u00e9a",
+        "installation_year":2017
     }
 ]

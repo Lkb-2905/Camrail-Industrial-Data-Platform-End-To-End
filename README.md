@@ -1,322 +1,244 @@
 🌍 DOSSIER DE CONFIGURATION D'EXPLOITATION (DCE)
-# ⚡ CAMRAIL : Chaîne Logistique Ferroviaire & Maintenance Prédictive
-![Python](https://img.shields.io/badge/Python-3.12+-green) ![Flask](https://img.shields.io/badge/Flask-API_REST-blue) ![Streamlit](https://img.shields.io/badge/Streamlit-Dashboard-orange) ![Data_Science](https://img.shields.io/badge/Data_Science-Random_Forest-red) ![Kafka](https://img.shields.io/badge/Kafka-Streaming-purple)
+# ⚡ CAMRAIL — Data Engineering & Data Analysis : ERP Industriel vers Dashboards Power BI
+
+![Power BI](https://img.shields.io/badge/Power_BI-Dashboards_Professionnels-yellow) ![DAX](https://img.shields.io/badge/DAX-Métriques_Avancées-orange) ![Power Query](https://img.shields.io/badge/Power_Query-ETL_Connecteur-blue) ![Data Engineering](https://img.shields.io/badge/Data_Engineering-Star_Schema-green)
 
 **Version:** 3.0.0 Enterprise | **Date:** Février 2026  
 **Auteur:** KAMENI TCHOUATCHEU GAETAN BRUNEL  
 **Contact:** gaetanbrunel.kamenitchouatcheu@et.esiea.fr  
 
-🚀 [Démarrage Rapide](#-démarrage-rapide) • 📚 [Documentation](#-guide-dutilisation) • 🎯 [Fonctionnalités](#-fonctionnalités-clés) • 🔧 [Installation](#-installation-complète)
+🚀 [Architecture](#-architecture-du-projet) • 📊 [Tableaux de Bord](#-aperçu-des-tableaux-de-bord) • 📈 [KPIs](#-kpis-calculés) • 🛠️ [Utilisation](#-comment-utiliser-ce-projet)
 
 ---
 
 ## 📋 TABLE DES MATIÈRES
+
 1. [Vue d'ensemble du projet](#-vue-densemble-du-projet)
-2. [Architecture Technique](#️-architecture-technique)
-3. [Stack Technologique](#️-stack-technologique)
-4. [Fonctionnalités Clés](#-fonctionnalités-clés)
-5. [Démarrage Rapide](#-démarrage-rapide)
-6. [Installation Complète](#-installation-complète)
-7. [Guide d'Utilisation](#-guide-dutilisation)
-8. [API Documentation](#-api-documentation)
-9. [Qualité & Best Practices](#-qualité--best-practices)
-10. [Roadmap & Évolutions](#️-roadmap--évolutions)
+2. [Architecture du projet](#-architecture-du-projet)
+3. [KPIs calculés](#-kpis-calculés)
+4. [Aperçu des Tableaux de Bord](#-aperçu-des-tableaux-de-bord)
+5. [Technologies utilisées](#-technologies-utilisées)
+6. [Comment utiliser ce projet](#-comment-utiliser-ce-projet)
+7. [Guide d'utilisation](#-guide-dutilisation)
+8. [Qualité & Best Practices](#-qualité--best-practices)
+9. [Roadmap & Évolutions](#-roadmap--évolutions)
 
 ---
 
 ## 🎯 VUE D'ENSEMBLE DU PROJET
 
 ### Contexte & Objectifs
-Ce projet démontre la mise en œuvre d'une architecture orientée **Data-Driven** pour le pilotage logistique ferroviaire (Camrail / Bolloré Logistics). Il répond aux exigences de la Supply Chain moderne en combinant ETL, maintenance prédictive par l'IA et supervision temps réel.
+
+Ce projet est un démonstrateur complet de **Data Engineering & Data Analysis** appliqué au pilotage logistique industriel. Il simule l'extraction de données transactionnelles quotidiennes d'un ERP industriel (**CAMRAIL**), leur nettoyage, leur modélisation en **Star Schema** et la production de rapports **Power BI** professionnels destinés à la prise de décision opérationnelle.
 
 Il illustre les compétences suivantes :
 
-✅ **Architecture Découplée :** Séparation stricte ETL (Pandas) / API ML (Flask) / Dashboard (Streamlit).
-✅ **Data Science Intégrée :** Moteur prédictif Scikit-Learn (Random Forest) pour la maintenance prédictive des locomotives.
-✅ **API RESTful :** Endpoints robustes avec validation Pydantic et authentification X-API-KEY.
-✅ **UX Moderne :** Interface de pilotage réactive (Streamlit) avec sliders et feedback temps réel.
-✅ **Industrialisation :** Plan de Continuité (PCR) dans chaque sous-projet (`DOSSIER_SECURITE_CONTINUITE_PCR.md`), documentation DCE, spécifications Power BI.
-✅ **Excel / Access :** Intégration bureautique — import Excel (source ERP), export rapports, lecture Access (voir `exemples_excel_access/`).
-✅ **Clean Code :** Modularité, tests automatisés (Pytest), compatibilité Pydantic v1/v2.
+✅ **Extraction de données** : Collecte des flux transactionnels ERP (CSV) et capteurs.  
+✅ **Nettoyage & Transformation** : Pipeline de préparation des données (Power Query).  
+✅ **Modélisation en étoile** : Schéma Star Schema pour des requêtes analytiques optimales.  
+✅ **Visualisation Business** : Dashboards Power BI orientés pilotage et décision.  
+✅ **KPIs métier** : Taux d'erreur, volume, fiabilité du parc machine, analyse temporelle.  
+✅ **Industrialisation** : Documentation DCE, conventions de nommage, réutilisabilité.
 
 ### Pourquoi ce projet ?
+
 | Aspect | Démonstration |
 | --- | --- |
-| **Scalabilité** | Architecture prête pour Kafka, PostgreSQL et Kubernetes (AKS). |
-| **Maintenabilité** | Code modulaire avec séparation ETL / ML / API / Dashboard. |
-| **Innovation** | Hybride unique entre pipeline ETL, Data Science et monitoring temps réel. |
-| **Sécurité** | X-API-KEY, validation Pydantic, secrets injectables. |
-| **Performance** | Modèle ML sérialisé (Joblib), chargement asynchrone, mode bootstrap local. |
+| **Pilotage** | Dashboards exécutifs et opérationnels pour la Supply Chain. |
+| **Fiabilité** | Suivi de la qualité des données et du pipeline de traitement. |
+| **Maintenance** | Identification des machines à risque et optimisation du parc. |
+| **Analyse temporelle** | Compréhension des shifts et tendances horaires/journalières. |
+| **Scalabilité** | Architecture modulaire prête pour des sources multiples (Cloud, APIs). |
 
 ---
 
-## 🏗️ ARCHITECTURE TECHNIQUE
+## 🏗️ ARCHITECTURE DU PROJET
 
-### Diagramme de Flux
+### Flux de données (Source → Dashboards)
+
 ```mermaid
-flowchart TD
-    classDef client fill:#38bdf8,stroke:#0284c7,stroke-width:2px,color:#000
-    classDef app fill:#4ade80,stroke:#16a34a,stroke-width:2px,color:#000
-    classDef intel fill:#facc15,stroke:#ca8a04,stroke-width:2px,color:#000
-    classDef data fill:#f87171,stroke:#dc2626,stroke-width:2px,color:#fff
-    classDef darkBox fill:#27272a,stroke:#52525b,stroke-width:2px,color:#fff
-
-    subgraph Client_Layer["Client Layer"]
-        O[👤 Opérateur Logistique]:::darkBox -->|Pilotage| R[Streamlit Dashboard<br>Port 8501]:::client
-    end
-
-    subgraph Application_Layer["Application Layer"]
-        N[Flask API Backend<br>Port 5000]:::app
-        S[Service Métier<br>DPA • PM-D]:::darkBox
-        R -->|HTTP GET/POST| N
-        N -->|API Request| OM
-        N -->|Fallback| SL
-        N -->|Orchestration| S
-    end
-
-    subgraph Data_Sources["Data Sources"]
-        OM[Kafka / PostgreSQL<br>API JSON Données Réelles]:::data
-        SL[Simulateur Local<br>CSV / Excel Synthétiques]:::data
-        SL -.-> OM
-    end
-
-    subgraph Intelligence_Layer["Intelligence Layer"]
-        P[Python Engine<br>Scikit-Learn Random Forest]:::intel
-    end
-
-    S -->|Shell Execution| P
-    P -->|JSON Output| S
-
-    style Client_Layer fill:#3f3f46,stroke:#52525b,color:#fff
-    style Application_Layer fill:#3f3f46,stroke:#52525b,color:#fff
-    style Data_Sources fill:#3f3f46,stroke:#52525b,color:#fff
-    style Intelligence_Layer fill:#3f3f46,stroke:#52525b,color:#fff
+graph LR
+A[🏭 ERP CAMRAIL & Capteurs] -->|Extractions| B(Données Brutes CSV)
+B -->|Hébergement| C[(GitHub Data Repository)]
+C -->|Connecteur Web| D[📊 Power BI Éditeur Power Query]
+D -->|Modélisation & DAX| E[Dashboards Analytiques]
+style A fill:#f9f,stroke:#333,stroke-width:2px
+style C fill:#bbf,stroke:#333,stroke-width:2px
+style D fill:#f96,stroke:#333,stroke-width:2px
 ```
 
-**Résultat visuel — Captures par composant :**
-| DPA | CIDP | PM-D |
+### Étapes du pipeline
+
+1. **Extraction** : Données transactionnelles quotidiennes (ERP) et signaux capteurs → fichiers CSV.  
+2. **Hébergement** : Stockage structuré (repository GitHub ou dossier local) pour traçabilité.  
+3. **Power Query** : Connecteur Web ou fichier → import, nettoyage, typage des colonnes.  
+4. **Modélisation** : Création du modèle Star Schema (fait central + dimensions).  
+5. **DAX** : Calcul des KPIs (Taux Erreur, agrégations, mesures conditionnelles).  
+6. **Dashboards** : Visualisations interactives pour le pilotage opérationnel.
+
+---
+
+## 📈 KPIs CALCULÉS
+
+Les indicateurs clés suivants sont calculés et exposés dans les tableaux de bord :
+
+| KPI | Description | Usage métier |
 | --- | --- | --- |
-| [Pipeline](docs/screenshots/05_dpa_pipeline_execution.png) • [DWH](docs/screenshots/06_dpa_sqlite_dwh.png) | [Vue](docs/screenshots/01_cidp_dashboard_vue_generale.png) • [Alerte](docs/screenshots/02_cidp_dashboard_alerte_danger.png) • [Dépannage](docs/screenshots/09_cidp_dashboard_error_timeout.png) | [Génération](docs/screenshots/07_pmd_generation_donnees.png) • [Training](docs/screenshots/08_pmd_model_training.png) |
-
-### Flux de Données Détaillé
-1. **Extraction (DPA) :** Données API JSON et ERP CSV → transformation Pandas → chargement SQLite.
-2. **Prédiction (CIDP) :** Bootstrap ou PostgreSQL → entraînement Random Forest → `models/latest.pkl`.
-3. **Supervision :** Dashboard Streamlit appelle l'API `/predict` avec télémétrie simulée (sliders).
-4. **Maintenance (PM-D) :** Génération télémétrie → feature engineering → entraînement modèle → sérialisation Joblib.
-
----
-
-## 🛠️ STACK TECHNOLOGIQUE
-
-### Technologies Core
-| Composant | Technologie | Version | Justification Technique |
-| --- | --- | --- | --- |
-| **Langage** | Python | 3.12+ | Standard Data Science, ETL, ML. |
-| **API** | Flask | 3.x | Endpoints REST, intégration Prometheus. |
-| **Dashboard** | Streamlit | Latest | Interface réactive, démo temps réel. |
-| **Data AI** | Scikit-Learn | Latest | Random Forest pour maintenance prédictive. |
-| **ETL** | Pandas | Latest | Manipulation vectorielle, jointures, agrégations. |
-| **Base** | SQLite / PostgreSQL | 3+ / 15+ | DWH léger (local) ou Cloud. |
-
-### Bibliothèques Complémentaires
-* **Pydantic :** Validation des payloads API (compatibilité v1/v2).
-* **Loguru :** Logging structuré avec rotation (10 MB / 30 jours).
-* **Joblib :** Sérialisation rapide des modèles ML.
-* **Prometheus_client :** Métriques SRE pour orchestrateurs.
+| **Volume Total** | Somme des volumes transférés (opérations) | Mesure de l'activité globale. |
+| **Total Errors** | Nombre de transactions en statut ERR | Criticité opérationnelle. |
+| **Machines Actives** | Nombre distinct de machines ayant généré des transactions | Couverture du parc. |
+| **Total Transactions** | Nombre total de transactions | Volume d'activité. |
+| **Taux d'Erreur** | `(Total Errors / Total Transactions) × 100` | Indicateur de qualité et fiabilité. |
+| **Répartition par status_code** | Ventilation OK / WARN / ERR | Diagnostic de la qualité des opérations. |
+| **Erreurs par machine_id** | Agrégation des erreurs par machine | Priorisation maintenance. |
+| **Total Volume par jour** | Agrégation temporelle | Tendances et saisonnalité. |
+| **Volume par Heure_Transaction** | Granularité horaire | Analyse des shifts. |
+| **Heatmap Jour × Heure** | Matrice croisée (Jour_Semaine × Heure) | Identification des pics d'activité. |
 
 ---
 
-## 🎯 FONCTIONNALITÉS CLÉS
+## 📊 APERÇU DES TABLEAUX DE BORD
 
-### 🚀 Fonctionnalités Principales
+### 1. Vue Executive — Synthèse des Opérations
 
-**Supervision Temps Réel (CIDP)**
-* Suivi des KPIs : Débit d'huile, Pression, Vibrations, Température.
-* Dashboard Streamlit "Camrail Live Monitor" avec test manuel API.
-* Affichage "OPÉRATION NOMINALE" ou "DANGER DÉTECTÉ" selon les prédictions.
+Tableau de bord managérial offrant une vue d'ensemble des KPIs essentiels : Taux Erreur, Total Errors, Machines Actives, Total Transactions, Total Volume. Graphique linéaire (Total Volume par Jour), graphique en anneau (répartition par status_code) et barres horizontales (Total Errors par machine_id) pour une lecture rapide de la performance opérationnelle.
 
-**Intelligence Artificielle Prédictive**
-* Modèle Random Forest pour détecter les risques de panne imminente.
-* Mode bootstrap local (entraînement depuis CSV sans PostgreSQL/Kafka).
-* Probabilité de risque et score binaire exposés via l'API.
-
-**Gestion des Risques**
-* Détection automatique des signatures métriques alarmantes.
-* Alertes visuelles (bannière rouge) et taux de fiabilité machine.
-
-**Reporting & DWH**
-* Pipeline ETL (DPA) : `fact_transactions`, `aggr_daily_site_stats`.
-* **Export Excel** automatique vers `reports/rapport_supply_chain.xlsx` (multi-feuilles).
-* **Excel / Access :** Lecture Excel comme source, export pour import Access. Exemples dans `exemples_excel_access/`.
-* Spécifications Power BI pour connexion DirectQuery PostgreSQL / SQLite.
-
-### 🛡️ Sécurité & Robustesse
-| Aspect | Implémentation |
-| --- | --- |
-| **Validation** | Pydantic strict sur tous les payloads API. |
-| **Authentification** | Header X-API-KEY obligatoire pour `/predict`. |
-| **Résilience** | Fallback bootstrap si PostgreSQL indisponible. |
-| **Traçabilité** | Logs rotatifs (Loguru), métriques Prometheus. |
+![CAMRAIL - Synthèse des Opérations (Executive Summary)](docs/screenshots/10_powerbi_executive_summary.png)
 
 ---
 
-## 🚀 DÉMARRAGE RAPIDE
+### 2. Performance du Parc Machine
 
-### Prérequis
-* Python (v3.12+)
-* pip
+Vue dédiée à l'analyse machine par machine : tableau avec Total Volume, Total Errors et Taux Erreur (formatage conditionnel vert/orange/rouge) et nuage de points croisant Volume et Taux Erreur pour identifier les machines à fort impact ou à risque prioritaire.
 
-### Installation Express (3 commandes)
-```powershell
-cd "c:\Users\pc\Desktop\projet CAMRAIL"
-pip install pandas numpy scikit-learn flask streamlit loguru pydantic joblib pyyaml python-dotenv
-# Puis CIDP : Terminal A → bootstrap + api ; Terminal B → streamlit run dashboard/app.py
-```
-
-### Lancement Développeur (Mode Local — Recommandé pour démo)
-
-> 💡 Utilisez le Python de **pyenv** si `python` ou `pip` ne sont pas configurés correctement.
-
-```powershell
-# 1. Installer les dépendances CIDP (pyenv recommandé)
-cd "c:\Users\pc\Desktop\projet CAMRAIL\Camrail-Industrial-Data-Platform"
-& "$env:USERPROFILE\.pyenv\pyenv-win\versions\3.12.10\python.exe" -m pip install -r requirements.txt
-
-# 2. Bootstrap + API — Terminal 1
-$env:PYTHONPATH = (Get-Location).Path
-& "$env:USERPROFILE\.pyenv\pyenv-win\versions\3.12.10\python.exe" bootstrap_local.py
-& "$env:USERPROFILE\.pyenv\pyenv-win\versions\3.12.10\python.exe" api/api.py
-
-# 3. Dashboard Streamlit — Terminal 2
-cd "c:\Users\pc\Desktop\projet CAMRAIL\Camrail-Industrial-Data-Platform"
-& "$env:USERPROFILE\.pyenv\pyenv-win\versions\3.12.10\python.exe" -m streamlit run dashboard/app.py
-```
-
-**Ordre requis :** Bootstrap + API en premier ; le Dashboard interroge l'API sur le port 5000 (sinon ReadTimeout).
-
-### Accès Immédiat
-* **Dashboard :** http://localhost:8501  
-* **API Backend :** http://127.0.0.1:5000  
+![CAMRAIL - Performance & Maintenance du Parc Machine](docs/screenshots/12_powerbi_performance_parc.png)
 
 ---
 
-## 📖 INSTALLATION COMPLÈTE
+### 3. Analyse Temporelle & Suivi des Shifts
 
-### Data Pipeline Automation (DPA)
-```powershell
-cd Data-Pipeline-Automation\src
-python main_pipeline.py
-```
-**Résultat :** `database/supply_chain_dwh.sqlite` + `reports/rapport_supply_chain.xlsx`. Voir `exemples_excel_access/` pour Excel/Access.
+Analyse des tendances horaires et journalières : Total Errors par Heure_Transaction, Total Volume par Heure_Transaction, et heatmap Jour_Semaine × Heure permettant de détecter les pics d'activité et les créneaux les plus critiques pour la qualité des opérations.
 
-### Predictive Maintenance Dashboard (PM-D)
-```powershell
-cd Predictive-Maintenance-Dashboard\src
-python data_generator.py
-python data_processing.py
-python model_training.py
-```
-**Résultat :** `models/rf_failure_predict.joblib`
+![CAMRAIL - Analyse Temporelle & Suivi des Shifts](docs/screenshots/13_powerbi_analyse_shifts.png)
 
-### Camrail Industrial Data Platform (CIDP)
-```powershell
-cd Camrail-Industrial-Data-Platform
-$env:PYTHONPATH = (Get-Location).Path
-python bootstrap_local.py
-python api/api.py
-# Terminal 2 :
-streamlit run dashboard/app.py
-```
+---
 
-Voir **[DEMARRAGE_RAPIDE.md](DEMARRAGE_RAPIDE.md)** pour les détails.
+### 4. Fiabilité du Pipeline de Données
+
+Vue orientée qualité des données : flux des transactions (Total → status_code → machine_id) et jauge du Taux Erreur pour évaluer en un coup d'œil la fiabilité du pipeline et la santé des données ingérées.
+
+![CAMRAIL - Fiabilité du Pipeline de Données (Data Quality)](docs/screenshots/11_powerbi_fiabilite_pipeline.png)
+
+---
+
+## 🛠️ TECHNOLOGIES UTILISÉES
+
+| Composant | Technologie | Usage |
+| --- | --- | --- |
+| **Visualisation** | Power BI Desktop | Création des dashboards, rapports, partage. |
+| **Formules métier** | DAX (Data Analysis Expressions) | Calcul des KPIs, mesures, agrégations. |
+| **ETL & Connecteurs** | Power Query (M) | Import, nettoyage, transformation des données. |
+| **Sources de données** | CSV | Données transactionnelles ERP (exportées ou simulées). |
+| **Modélisation** | Star Schema | Fait central (transactions) + dimensions (machines, dates, statuts). |
+
+### Rôle de chaque technologie
+
+- **Power BI** : Interface unique pour la visualisation et l’interaction avec les données.  
+- **DAX** : Calculs dynamiques (Taux Erreur, agrégations conditionnelles, rankings).  
+- **Power Query** : Prétraitement, typage, filtrage avant chargement dans le modèle.  
+- **CSV** : Format standard d’échange pour les données brutes (ERP, capteurs, logs).
+
+---
+
+## 🚀 COMMENT UTILISER CE PROJET
+
+### Méthode recommandée : Power BI Desktop
+
+1. **Télécharger** le fichier `.pbix` du projet (depuis le dépôt GitHub ou le dossier du projet).
+2. **Ouvrir** le fichier avec **Power BI Desktop** (gratuit, [téléchargement Microsoft](https://powerbi.microsoft.com/fr-fr/desktop/)).
+3. **Actualiser** les données si les chemins des sources CSV ont changé (Fichier → Options et paramètres → Options de source de données).
+4. **Explorer** les tableaux de bord, appliquer les filtres (date, machine_id, status_code) et exporter les rapports si besoin.
+
+### Option : Reconstruction à partir des CSV
+
+Si le fichier `.pbix` n’est pas fourni, il est possible de reconstruire les dashboards :
+
+1. Créer un nouveau rapport Power BI Desktop.  
+2. Obtenir les données → Fichier texte/CSV (ou Web si les CSV sont hébergés).  
+3. Appliquer les transformations Power Query nécessaires.  
+4. Construire le modèle Star Schema et les mesures DAX selon les spécifications du projet (voir `POWER_BI_SPECS.md` dans les sous-projets).
 
 ---
 
 ## 📖 GUIDE D'UTILISATION
 
-### Scénario de Pilotage
-1. **Connexion :** Lancez l'API puis le Dashboard Streamlit.
-2. **Supervision :** Observez les sliders. Valeurs nominales (Débit 500, Pression 5, Vibrations 2, Température 45) → "OPÉRATION NOMINALE".
-3. **Anticipation :** Augmentez Vibrations (7+) et Température (85+) → "DANGER DÉTECTÉ".
-4. **Action :** Exportez les données DWH (Excel automatique dans `reports/`) ou connectez Power BI (voir `POWER_BI_SPECS.md`).
+### Scénarios de pilotage
 
-### Captures d'Écran
-| DPA | CIDP | PM-D |
-| --- | --- | --- |
-| [Pipeline](docs/screenshots/05_dpa_pipeline_execution.png) • [DWH](docs/screenshots/06_dpa_sqlite_dwh.png) | [Vue](docs/screenshots/01_cidp_dashboard_vue_generale.png) • [Alerte](docs/screenshots/02_cidp_dashboard_alerte_danger.png) • [Timeout](docs/screenshots/09_cidp_dashboard_error_timeout.png) | [Génération](docs/screenshots/07_pmd_generation_donnees.png) • [Training](docs/screenshots/08_pmd_model_training.png) |
+1. **Reporting exécutif** : Vue Synthèse des Opérations pour les réunions de direction.  
+2. **Maintenance prédictive** : Vue Performance du Parc pour prioriser les interventions.  
+3. **Optimisation des shifts** : Vue Analyse Temporelle pour adapter les plannings.  
+4. **Qualité des données** : Vue Fiabilité du Pipeline pour auditer la chaîne de traitement.
 
----
+### Filtres disponibles
 
-## 📡 API DOCUMENTATION
-
-### Endpoints Disponibles
-
-**1. Santé du Système**
-```
-GET /health
-```
-Vérifie que l'API Flask est opérationnelle.
-
-**2. Prédiction IA**
-```
-POST /predict
-Headers: X-API-KEY: entreprise_secret_key_2026
-Body: { "loco_id": "LOCO_001", "flow_rate": 500, "pressure": 5.0, "vibration": 2.0, "temperature": 45.0 }
-```
-Retourne `critical_risk` (0/1) et `risk_probability`.
-
-**3. Métriques Prometheus**
-```
-GET /metrics
-```
-Exposition des métriques SRE pour Grafana.
+- **date** : Plage temporelle des transactions.  
+- **status_code** : OK, WARN, ERR.  
+- **machine_id** : Filtrage par machine (ex. MCH-001, MCH-006).
 
 ---
 
 ## ✨ QUALITÉ & BEST PRACTICES
 
-### Standards de Code
-* **Modularité :** Couches ETL, ML, API et Dashboard isolées.
-* **Typage :** Dataframes Pandas typés, validation Pydantic.
-* **Error Handling :** Blocs try/except, messages d'erreur explicites.
-* **Tests :** Pytest (`tests/test_api.py`) — health, unauthorized, schema validation.
+### Standards appliqués
 
-### Métriques d'Excellence
-✅ **Couverture fonctionnelle :** ETL, ML, API, Dashboard end-to-end.
-✅ **Performance :** Temps de réponse API < 200 ms.
-✅ **Disponibilité :** Mode bootstrap local sans dépendance Cloud.
+- **Modélisation** : Star Schema pour des requêtes analytiques performantes.  
+- **Naming** : Conventions cohérentes (snake_case, préfixes explicites).  
+- **Documentation** : README, specs Power BI, schémas du modèle.  
+- **Formatage conditionnel** : Utilisation du rouge pour les alertes (Taux Erreur, ERR).
+
+### Métriques d'excellence
+
+✅ **Couverture fonctionnelle** : 4 vues complémentaires (Executive, Parc, Shifts, Fiabilité).  
+✅ **Lisibilité** : KPIs mis en évidence, visualisations adaptées au type d’analyse.  
+✅ **Réutilisabilité** : Modèle modulaire, sources configurables.
 
 ---
 
 ## 🗺️ ROADMAP & ÉVOLUTIONS
 
 **Version Actuelle : 3.0.0 Enterprise ✅**
-* Architecture E2E (DPA, CIDP, PM-D).
-* Mode bootstrap local.
-* Dashboard Streamlit avec X-API-KEY.
-* Documentation DCE, PCR, Power BI Specs.
+
+- Extraction ERP simulée (CSV).  
+- Modélisation Star Schema.  
+- 4 tableaux de bord Power BI (Executive, Parc, Shifts, Fiabilité).  
+- KPIs métier complets.  
+- Documentation DCE.
 
 **Version 3.1.0 (Prochaine Release) 🚧**
-* Dockerisation : Conteneurs pour API, Dashboard, Kafka.
-* Terraform : Provisionnement Azure complet.
+
+- Connexion DirectQuery vers PostgreSQL/SQLite.  
+- Intégration des données du pipeline Python (DPA, CIDP, PM-D).
 
 **Version 4.0.0 (Vision Long Terme) 🔮**
-* Digital Twin : Jumeau numérique du parc locomotives.
-* IoT : Connexion capteurs MQTT temps réel.
-* Cloud Native : Déploiement AKS, Event Hubs.
+
+- Streaming temps réel (Power BI REST API, Kafka).  
+- Déploiement Power BI Service (cloud).  
+- Alertes et notifications automatiques.
 
 ---
 
 ## 🤝 CONTRIBUTION
+
 Les contributions sont les bienvenues pour faire évoluer ce démonstrateur vers une solution industrielle.
 
-1. Forker.
-2. Créer une branche `feature/NomFeature`.
+1. Forker le projet.  
+2. Créer une branche `feature/NomFeature`.  
 3. Proposer une Pull Request avec description métier.
 
 ---
 
 ## 📄 LICENCE
+
 Ce projet est développé dans un cadre académique et professionnel. Droits réservés.
 
 ---
@@ -330,10 +252,11 @@ Ingénieur Logiciel & Data Scientist en devenir | Étudiant ESIEA
 🐙 GitHub : @Lkb-2905  
 
 🙏 **REMERCIEMENTS**
-* **Bolloré Logistics & Camrail :** Pour l'inspiration des cas d'usage logistiques industriels.
-* **ESIEA :** Pour l'excellence de la formation ingénieur.
+
+- **Bolloré Logistics & Camrail** : Pour l'inspiration des cas d'usage logistiques industriels.  
+- **ESIEA** : Pour l'excellence de la formation ingénieur.
 
 ⭐ Si ce projet vous semble pertinent pour la Supply Chain de demain, laissez une étoile !  
-Fait avec ❤️, Python et Scikit-Learn.
+Fait avec ❤️, Power BI et DAX.
 
 © 2026 Kameni Tchouatcheu Gaetan Brunel — Tous droits réservés
