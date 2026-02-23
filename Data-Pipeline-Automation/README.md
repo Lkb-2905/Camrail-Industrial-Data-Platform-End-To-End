@@ -49,7 +49,51 @@ Il illustre les compétences suivantes :
 
 ## 🏗️ ARCHITECTURE TECHNIQUE
 
-### Diagramme de Flux
+### Diagramme de Flux (Vue Logique & ETL Local)
+```mermaid
+flowchart TD
+    %% Styling
+    classDef client fill:#38bdf8,stroke:#0284c7,stroke-width:2px,color:#000
+    classDef app fill:#4ade80,stroke:#16a34a,stroke-width:2px,color:#000
+    classDef intel fill:#facc15,stroke:#ca8a04,stroke-width:2px,color:#000
+    classDef data fill:#f87171,stroke:#dc2626,stroke-width:2px,color:#fff
+    classDef darkBox fill:#27272a,stroke:#52525b,stroke-width:2px,color:#fff
+
+    subgraph Client Layer
+        O[👤 Opérateur Logistique]:::darkBox -->|Pilotage| R[Dashboard BI / DBeaver<br>SQL Analytics]:::client
+    end
+
+    subgraph Application Layer
+        N[Python ETL Pipeline<br>main_pipeline.py]:::app
+        S[Data Warehouse<br>SQLite / SQlAlchemy]:::darkBox
+        N -->|Orchestration| S
+    end
+
+    subgraph Data Sources
+        OM[Kafka / Azure SQL<br>Données Cloud]:::data
+        SL[Sources Locales<br>CSVs / JSONs / Excel]:::darkBox
+    end
+
+    subgraph Intelligence Layer
+        P[Python Transform<br>Pandas Analytics]:::intel
+    end
+
+    %% Connections
+    R -->|Requêtes SQL| S
+    N -.->|Extract Cloud| OM
+    N -->|Extract Local| SL
+    N -->|Transformation| P
+    P -->|Dataframes Propres| N
+    N -->|Load (SQL Insert)| S
+
+    %% Custom styles for Subgraphs
+    style Client Layer fill:#3f3f46,stroke:#52525b,color:#fff
+    style Application Layer fill:#3f3f46,stroke:#52525b,color:#fff
+    style Data Sources fill:#3f3f46,stroke:#52525b,color:#fff
+    style Intelligence Layer fill:#3f3f46,stroke:#52525b,color:#fff
+```
+
+### Architecture Infra (Cloud)
 ```mermaid
 graph TD
     subgraph Client Layer
@@ -128,6 +172,8 @@ graph TD
 
 ### Bibliothèques Complémentaires
 * **Loguru/Logging :** Traçabilité exhaustive.
+* **Openpyxl :** Lecture/écriture Excel (source ERP, export rapports).
+* **PyODBC :** Connexion Microsoft Access (bases legacy, migration).
 * **OS/Sys :** Commandes natives utiles à l'interaction Windows (Task Scheduler).
 
 ---
@@ -183,6 +229,9 @@ python main_pipeline.py
 3. **Action:** Construction de Dashboard et exports métier sur l'activité des "Gares".
 
 ### Captures d'Écran
+**📸 Résultat de l'exécution (Local)**  
+![Exécution Local](execution_screenshot.png)
+
 **📸 Exécution du Pipeline ETL**  
 ![Exécution du Pipeline ETL](../docs/screenshots/05_dpa_pipeline_execution.png)
 

@@ -51,6 +51,51 @@ Il illustre de A à Z les compétences absolues suivantes :
 
 ## 🏗️ ARCHITECTURE TECHNIQUE
 
+### Diagramme de Flux (Vue Logique & Local)
+```mermaid
+flowchart TD
+    %% Styling
+    classDef client fill:#38bdf8,stroke:#0284c7,stroke-width:2px,color:#000
+    classDef app fill:#4ade80,stroke:#16a34a,stroke-width:2px,color:#000
+    classDef intel fill:#facc15,stroke:#ca8a04,stroke-width:2px,color:#000
+    classDef data fill:#f87171,stroke:#dc2626,stroke-width:2px,color:#fff
+    classDef darkBox fill:#27272a,stroke:#52525b,stroke-width:2px,color:#fff
+
+    subgraph Client Layer
+        O[👤 Opérateur Logistique]:::darkBox -->|Pilotage| R[Streamlit Dashboard<br>Port 8501]:::client
+    end
+
+    subgraph Application Layer
+        N[Flask API Backend<br>Port 5000]:::app
+        S[Service Métier]:::darkBox
+        N -->|Orchestration| S
+    end
+
+    subgraph Data Sources
+        OM[Kafka / PostgreSQL<br>Données Réelles]:::data
+        SL[Simulateur Local<br>Données Synthétiques]:::darkBox
+    end
+
+    subgraph Intelligence Layer
+        P[Python Engine<br>Scikit-Learn]:::intel
+    end
+
+    %% Connections
+    R -->|HTTP GET/POST| N
+    N -.->|API Request| OM
+    N -->|Fallback| SL
+    S -->|Shell / API Execution| P
+    P -->|JSON Output| S
+
+    %% Custom styles for Subgraphs
+    style Client Layer fill:#3f3f46,stroke:#52525b,color:#fff
+    style Application Layer fill:#3f3f46,stroke:#52525b,color:#fff
+    style Data Sources fill:#3f3f46,stroke:#52525b,color:#fff
+    style Intelligence Layer fill:#3f3f46,stroke:#52525b,color:#fff
+```
+
+### Architecture Infra (Cloud)
+
 ### Diagramme de Flux
 ```mermaid
 graph TD
@@ -219,6 +264,9 @@ python run_platform.py
 3. **Démo Recruteur :** Lancer l'API + Dashboard, afficher le cas nominal (Vibration 2, Température 45), puis simuler une alerte (Vibration 7+, Température 85+) et montrer le message "DANGER DÉTECTÉ".
 
 ### Captures d'Écran
+**📸 Résultat de l'exécution (Local)**  
+![Exécution Local](execution_screenshot.png)
+
 **📸 Dashboard Streamlit — Vue générale**  
 ![Camrail Live Monitor](../docs/screenshots/01_cidp_dashboard_vue_generale.png)
 

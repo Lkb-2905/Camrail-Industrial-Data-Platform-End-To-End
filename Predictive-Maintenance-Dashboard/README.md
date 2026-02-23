@@ -50,7 +50,50 @@ Il illustre les compétences suivantes :
 
 ## 🏗️ ARCHITECTURE TECHNIQUE
 
-### Diagramme de Flux
+### Diagramme de Flux (Vue Logique & ML Ops)
+```mermaid
+flowchart TD
+    %% Styling
+    classDef client fill:#38bdf8,stroke:#0284c7,stroke-width:2px,color:#000
+    classDef app fill:#4ade80,stroke:#16a34a,stroke-width:2px,color:#000
+    classDef intel fill:#facc15,stroke:#ca8a04,stroke-width:2px,color:#000
+    classDef data fill:#f87171,stroke:#dc2626,stroke-width:2px,color:#fff
+    classDef darkBox fill:#27272a,stroke:#52525b,stroke-width:2px,color:#fff
+
+    subgraph Client Layer
+        O[👤 Analyste Maintenance]:::darkBox -->|Supervision| R[Power BI Dashboard<br>Monitoring Executif]:::client
+    end
+
+    subgraph Application Layer
+        N[Python Data Processing<br>data_processing.py]:::app
+        S[Feature Engineering & Scaling]:::darkBox
+        N -->|Transformation| S
+    end
+
+    subgraph Data Sources
+        OM[Kafka / Azure IoT<br>Télémétrie Cloud]:::data
+        SL[Générateur Local<br>data_generator.py]:::darkBox
+    end
+
+    subgraph Intelligence Layer
+        P[Modélisation ML Random Forest<br>model_training.py]:::intel
+    end
+
+    %% Connections
+    R -->|Requête Dashboard| OM
+    N -.->|Extract Cloud| OM
+    N -->|Extract Local| SL
+    S -->|Données Propres ML| P
+    P -->|Génération Modèle (.joblib)| S
+
+    %% Custom styles for Subgraphs
+    style Client Layer fill:#3f3f46,stroke:#52525b,color:#fff
+    style Application Layer fill:#3f3f46,stroke:#52525b,color:#fff
+    style Data Sources fill:#3f3f46,stroke:#52525b,color:#fff
+    style Intelligence Layer fill:#3f3f46,stroke:#52525b,color:#fff
+```
+
+### Architecture Infra (Cloud)
 ```mermaid
 graph TD
     subgraph Client Layer
@@ -191,6 +234,9 @@ python model_training.py      # Entraîne et sauvegarde rf_failure_predict.jobli
 3. **Action :** Exporter le rapport vers le département maintenance technique (cf. `POWER_BI_SPECS.md`).
 
 ### Captures d'Écran
+**📸 Résultat de l'exécution (Local)**  
+![Exécution Local](execution_screenshot.png)
+
 **📸 Génération et traitement des données**  
 ![Génération des données](../docs/screenshots/07_pmd_generation_donnees.png)
 

@@ -36,6 +36,7 @@ Il illustre les compétences suivantes :
 ✅ **API RESTful :** Endpoints robustes avec validation Pydantic et authentification X-API-KEY.
 ✅ **UX Moderne :** Interface de pilotage réactive (Streamlit) avec sliders et feedback temps réel.
 ✅ **Industrialisation :** Plan de Continuité (PCR), documentation DCE, spécifications Power BI.
+✅ **Excel / Access :** Intégration bureautique — import Excel (source ERP), export rapports, lecture Access (voir `exemples_excel_access/`).
 ✅ **Clean Code :** Modularité, tests automatisés (Pytest), compatibilité Pydantic v1/v2.
 
 ### Pourquoi ce projet ?
@@ -116,6 +117,8 @@ Il illustre les compétences suivantes :
 
 **Reporting & DWH**
 * Pipeline ETL (DPA) : `fact_transactions`, `aggr_daily_site_stats`.
+* **Export Excel** automatique vers `reports/rapport_supply_chain.xlsx` (multi-feuilles).
+* **Excel / Access :** Lecture Excel comme source, export pour import Access. Exemples dans `exemples_excel_access/`.
 * Spécifications Power BI pour connexion DirectQuery PostgreSQL / SQLite.
 
 ### 🛡️ Sécurité & Robustesse
