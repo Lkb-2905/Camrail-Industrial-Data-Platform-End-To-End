@@ -168,21 +168,31 @@ flowchart TD
 
 ### Installation Express (3 commandes)
 ```powershell
-# 1. Cloner / naviguer vers le projet
 cd "c:\Users\pc\Desktop\projet CAMRAIL"
-
-# 2. Installer les dépendances
 pip install pandas numpy scikit-learn flask streamlit loguru pydantic joblib pyyaml python-dotenv
-
-# 3. Lancer la démo CIDP (2 terminaux)
-# Terminal A (API) :
-cd Camrail-Industrial-Data-Platform
-$env:PYTHONPATH = (Get-Location).Path
-python bootstrap_local.py
-python api/api.py
-# Terminal B (Dashboard) :
-streamlit run dashboard/app.py
+# Puis CIDP : Terminal A → bootstrap + api ; Terminal B → streamlit run dashboard/app.py
 ```
+
+### Lancement Développeur (Mode Local — Recommandé pour démo)
+
+> 💡 Utilisez le Python de **pyenv** si `python` ou `pip` ne sont pas configurés correctement.
+
+```powershell
+# 1. Installer les dépendances CIDP (pyenv recommandé)
+cd "c:\Users\pc\Desktop\projet CAMRAIL\Camrail-Industrial-Data-Platform"
+& "$env:USERPROFILE\.pyenv\pyenv-win\versions\3.12.10\python.exe" -m pip install -r requirements.txt
+
+# 2. Bootstrap + API — Terminal 1
+$env:PYTHONPATH = (Get-Location).Path
+& "$env:USERPROFILE\.pyenv\pyenv-win\versions\3.12.10\python.exe" bootstrap_local.py
+& "$env:USERPROFILE\.pyenv\pyenv-win\versions\3.12.10\python.exe" api/api.py
+
+# 3. Dashboard Streamlit — Terminal 2
+cd "c:\Users\pc\Desktop\projet CAMRAIL\Camrail-Industrial-Data-Platform"
+& "$env:USERPROFILE\.pyenv\pyenv-win\versions\3.12.10\python.exe" -m streamlit run dashboard/app.py
+```
+
+**Ordre requis :** Bootstrap + API en premier ; le Dashboard interroge l'API sur le port 5000 (sinon ReadTimeout).
 
 ### Accès Immédiat
 * **Dashboard :** http://localhost:8501  

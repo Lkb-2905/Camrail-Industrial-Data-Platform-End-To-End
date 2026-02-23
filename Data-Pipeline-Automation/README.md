@@ -216,14 +216,25 @@ graph TD
 ```powershell
 # 1. Cloner le projet (Naviguer au sein du répertoire)
 cd Data-Pipeline-Automation
-
-# 2. Installer les dépendances
 pip install -r requirements.txt
-
-# 3. Lancer l'Orchestrateur Complet
 cd src
 python main_pipeline.py
 ```
+
+### Lancement Développeur (Mode Local — Recommandé pour démo)
+
+> 💡 Utilisez le Python de **pyenv** si `python` ou `pip` ne sont pas configurés correctement.
+
+```powershell
+# 1. Installer les dépendances (pyenv recommandé)
+cd "c:\Users\pc\Desktop\projet CAMRAIL\Data-Pipeline-Automation"
+& "$env:USERPROFILE\.pyenv\pyenv-win\versions\3.12.10\python.exe" -m pip install -r requirements.txt
+
+# 2. Lancer l'Orchestrateur Complet (ETL)
+cd src
+& "$env:USERPROFILE\.pyenv\pyenv-win\versions\3.12.10\python.exe" main_pipeline.py
+```
+
 **Accès Immédiat :** Les tables historiques sont fraîches et disponibles instantanément dans `database/supply_chain_dwh.sqlite`. L'export Excel est généré automatiquement dans `reports/rapport_supply_chain.xlsx`.
 
 > 💡 **Excel / Access :** Exemples et cas d'usage dans `../exemples_excel_access/`.

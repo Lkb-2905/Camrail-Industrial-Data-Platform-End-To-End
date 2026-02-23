@@ -213,18 +213,30 @@ graph TD
 
 ### Installation Rapide
 ```powershell
-# 1. Naviguer dans le dossier du projet
 cd Predictive-Maintenance-Dashboard
-
-# 2. Installer les dépendances
 pip install -r requirements.txt
-
-# 3. Lancer la solution (Séquentiellement — ordre obligatoire)
 cd src
-python data_generator.py      # Génère raw_telemetry.csv
-python data_processing.py     # Crée processed_telemetry.csv
-python model_training.py      # Entraîne et sauvegarde rf_failure_predict.joblib
+python data_generator.py
+python data_processing.py
+python model_training.py
 ```
+
+### Lancement Développeur (Mode Local — Recommandé pour démo)
+
+> 💡 Utilisez le Python de **pyenv** si `python` ou `pip` ne sont pas configurés correctement.
+
+```powershell
+# 1. Installer les dépendances (pyenv recommandé)
+cd "c:\Users\pc\Desktop\projet CAMRAIL\Predictive-Maintenance-Dashboard"
+& "$env:USERPROFILE\.pyenv\pyenv-win\versions\3.12.10\python.exe" -m pip install -r requirements.txt
+
+# 2. Lancer la solution (séquentiellement — ordre obligatoire)
+cd src
+& "$env:USERPROFILE\.pyenv\pyenv-win\versions\3.12.10\python.exe" data_generator.py      # Génère raw_telemetry.csv
+& "$env:USERPROFILE\.pyenv\pyenv-win\versions\3.12.10\python.exe" data_processing.py     # Crée processed_telemetry.csv
+& "$env:USERPROFILE\.pyenv\pyenv-win\versions\3.12.10\python.exe" model_training.py      # Entraîne et sauvegarde rf_failure_predict.joblib
+```
+
 **Accès Immédiat :** Le modèle `rf_failure_predict.joblib` et les CSV traités sont générés instantanément. Intégration possible avec CIDP (API ML) et Power BI.
 
 ---

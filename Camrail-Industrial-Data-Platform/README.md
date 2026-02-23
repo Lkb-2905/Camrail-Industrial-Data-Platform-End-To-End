@@ -230,23 +230,25 @@ terraform init && terraform apply -auto-approve
 ```
 
 ### Lancement Développeur (Mode Local — Recommandé pour démo)
+
+> 💡 Utilisez le Python de **pyenv** si `python` ou `pip` ne sont pas configurés correctement.
+
 ```powershell
-# 1. Créer l'environnement virtuel et installer les dépendances
-cd Camrail-Industrial-Data-Platform
-python -m venv .venv
-.\.venv\Scripts\activate
-pip install -r requirements.txt
+# 1. Installer les dépendances (pyenv recommandé)
+cd "c:\Users\pc\Desktop\projet CAMRAIL\Camrail-Industrial-Data-Platform"
+& "$env:USERPROFILE\.pyenv\pyenv-win\versions\3.12.10\python.exe" -m pip install -r requirements.txt
 
-# 2. Bootstrap du modèle (entraînement depuis CSV)
+# 2. Bootstrap du modèle puis API — Terminal 1
 $env:PYTHONPATH = (Get-Location).Path
-python bootstrap_local.py
+& "$env:USERPROFILE\.pyenv\pyenv-win\versions\3.12.10\python.exe" bootstrap_local.py
+& "$env:USERPROFILE\.pyenv\pyenv-win\versions\3.12.10\python.exe" api/api.py
 
-# 3. Démarrer l'API Flask (Terminal 1)
-python api/api.py
-
-# 4. Démarrer le Dashboard Streamlit (Terminal 2)
-streamlit run dashboard/app.py
+# 3. Dashboard Streamlit — Terminal 2 (dans le même dossier)
+cd "c:\Users\pc\Desktop\projet CAMRAIL\Camrail-Industrial-Data-Platform"
+& "$env:USERPROFILE\.pyenv\pyenv-win\versions\3.12.10\python.exe" -m streamlit run dashboard/app.py
 ```
+
+**Ordre requis :** Bootstrap + API en premier ; le Dashboard interroge l'API sur le port 5000 (sinon ReadTimeout).
 
 **Accès Immédiat :**
 * API : **http://127.0.0.1:5000** (GET `/health`, POST `/predict` avec header `X-API-KEY: entreprise_secret_key_2026`)
