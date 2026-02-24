@@ -172,7 +172,9 @@ Interface de pilotage connectée à l’API ML pour simuler la télémétrie (D�
 
 ### Méthode recommandée : Power BI Desktop
 
-1. **Télécharger** le fichier `.pbix` du projet (depuis le dépôt GitHub ou le dossier du projet).
+📂 **Accès au fichier .pbix** : [Voir le rapport Power BI en ligne](https://etesiea-my.sharepoint.com/:u:/g/personal/gaetanbrunel_kamenitchouatcheu_et_esiea_fr/IQDpONf64emnQJ_wY-r5WIvPARVpVIU_W6_OZnH6IEUId3Q?e=Rl1qvA)
+
+1. **Télécharger** le fichier `.pbix` du projet (depuis le lien ci-dessus, le dépôt GitHub ou le dossier du projet).
 2. **Ouvrir** le fichier avec **Power BI Desktop** (gratuit, [téléchargement Microsoft](https://powerbi.microsoft.com/fr-fr/desktop/)).
 3. **Actualiser** les données si les chemins des sources CSV ont changé (Fichier → Options et paramètres → Options de source de données).
 4. **Explorer** les tableaux de bord, appliquer les filtres (date, machine_id, status_code) et exporter les rapports si besoin.
