@@ -131,6 +131,24 @@ Vue orientée qualité des données : flux des transactions (Total → status_co
 
 ---
 
+### 5. Dashboard Streamlit (CIDP) — Supervision temps réel
+
+Interface de pilotage connectée à l’API ML pour simuler la télémétrie (Débit, Pression, Vibrations, Température) et afficher les prédictions de risque.
+
+**Vue générale** — OPÉRATION NOMINALE (valeurs nominales) :
+
+![Dashboard CIDP — Vue générale](docs/screenshots/01_cidp_dashboard_vue_generale.png)
+
+**Cas alerte** — DANGER DÉTECTÉ (bannière rouge, Vibrations/Température élevées) :
+
+![Dashboard CIDP — Cas alerte](docs/screenshots/02_cidp_dashboard_alerte_danger.png)
+
+**Dépannage** — Erreur ReadTimeout si l’API Flask n’est pas démarrée sur le port 5000 :
+
+![Dashboard CIDP — Erreur ReadTimeout](docs/screenshots/09_cidp_dashboard_error_timeout.png)
+
+---
+
 ## 🛠️ TECHNOLOGIES UTILISÉES
 
 | Composant | Technologie | Usage |
