@@ -93,9 +93,18 @@ flowchart TD
 ```
 
 **Résultat visuel — Dashboard en action :**
-| Vue générale | Cas alerte | Dépannage |
-| --- | --- | --- |
-| [01_vue_generale](../docs/screenshots/01_cidp_dashboard_vue_generale.png) | [02_alerte_danger](../docs/screenshots/02_cidp_dashboard_alerte_danger.png) | [09_timeout](../docs/screenshots/09_cidp_dashboard_error_timeout.png) |
+
+*Vue générale — OPÉRATION NOMINALE (valeurs nominales) :*
+
+![Dashboard Streamlit — Vue générale](../docs/screenshots/01_cidp_dashboard_vue_generale.png)
+
+*Cas alerte — DANGER DÉTECTÉ (bannière rouge, Vibrations/Température élevées) :*
+
+![Dashboard Streamlit — Cas alerte](../docs/screenshots/02_cidp_dashboard_alerte_danger.png)
+
+*Dépannage — Erreur ReadTimeout si l'API Flask n'est pas démarrée :*
+
+![Dashboard — Erreur ReadTimeout](../docs/screenshots/09_cidp_dashboard_error_timeout.png)
 
 ### Architecture Infra (Cloud)
 
@@ -269,12 +278,28 @@ python run_platform.py
 3. **Démo Recruteur :** Lancer l'API + Dashboard, afficher le cas nominal (Vibration 2, Température 45), puis simuler une alerte (Vibration 7+, Température 85+) et montrer le message "DANGER DÉTECTÉ".
 
 ### Captures d'Écran
-| Vue | Description | Capture |
-| --- | --- | --- |
-| **Vue générale** | Dashboard nominal — OPÉRATION NOMINALE | ![01](../docs/screenshots/01_cidp_dashboard_vue_generale.png) |
-| **Cas alerte** | DANGER DÉTECTÉ (bannière rouge) | ![02](../docs/screenshots/02_cidp_dashboard_alerte_danger.png) |
-| **Bootstrap + API** | Terminal : démarrage bootstrap et API Flask | ![04](../docs/screenshots/04_cidp_bootstrap_api_demarrage.png) |
-| **Dépannage** | Erreur ReadTimeout si API non démarrée | ![09](../docs/screenshots/09_cidp_dashboard_error_timeout.png) |
+
+**Vue générale** — Dashboard nominal (OPÉRATION NOMINALE) :
+
+![Dashboard CIDP — Vue générale](../docs/screenshots/01_cidp_dashboard_vue_generale.png)
+
+---
+
+**Cas alerte** — DANGER DÉTECTÉ (bannière rouge) :
+
+![Dashboard CIDP — Cas alerte](../docs/screenshots/02_cidp_dashboard_alerte_danger.png)
+
+---
+
+**Bootstrap + API** — Terminal : démarrage de `bootstrap_local.py` et API Flask :
+
+![Bootstrap et démarrage API Flask](../docs/screenshots/04_cidp_bootstrap_api_demarrage.png)
+
+---
+
+**Dépannage** — Erreur ReadTimeout si l'API n'est pas démarrée sur le port 5000 :
+
+![Erreur ReadTimeout — API non démarrée](../docs/screenshots/09_cidp_dashboard_error_timeout.png)
 
 > 💡 Captures dans `docs/screenshots/` — Convention : voir `../docs/screenshots/README.md`
 

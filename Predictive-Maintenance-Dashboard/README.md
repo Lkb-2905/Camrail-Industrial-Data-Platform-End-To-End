@@ -92,9 +92,14 @@ flowchart TD
 ```
 
 **Résultat visuel — Workflow ML :**
-| Génération données | Entraînement modèle |
-| --- | --- |
-| [07_generation](../docs/screenshots/07_pmd_generation_donnees.png) | [08_training](../docs/screenshots/08_pmd_model_training.png) |
+
+*Génération des données (data_generator / data_processing) :*
+
+![Génération données PM-D](../docs/screenshots/07_pmd_generation_donnees.png)
+
+*Entraînement du modèle (model_training — classification report, accuracy) :*
+
+![Entraînement modèle Random Forest](../docs/screenshots/08_pmd_model_training.png)
 
 ### Architecture Infra (Cloud)
 ```mermaid
@@ -249,10 +254,16 @@ cd src
 3. **Action :** Exporter le rapport vers le département maintenance technique (cf. `POWER_BI_SPECS.md`).
 
 ### Captures d'Écran
-| Vue | Description | Capture |
-| --- | --- | --- |
-| **Génération** | data_generator / data_processing | ![07](../docs/screenshots/07_pmd_generation_donnees.png) |
-| **Entraînement** | model_training — classification report, accuracy | ![08](../docs/screenshots/08_pmd_model_training.png) |
+
+**Génération des données** — Exécution de `data_generator.py` et `data_processing.py` :
+
+![Génération données PM-D](../docs/screenshots/07_pmd_generation_donnees.png)
+
+---
+
+**Entraînement du modèle** — Exécution de `model_training.py` (classification report, accuracy) :
+
+![Entraînement modèle Random Forest](../docs/screenshots/08_pmd_model_training.png)
 
 > 💡 Captures dans `docs/screenshots/` — Convention : voir `../docs/screenshots/README.md`
 

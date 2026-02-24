@@ -91,9 +91,14 @@ flowchart TD
 ```
 
 **Résultat visuel — Pipeline et DWH :**
-| Exécution ETL | Base DWH SQLite |
-| --- | --- |
-| [05_pipeline](../docs/screenshots/05_dpa_pipeline_execution.png) | [06_dwh](../docs/screenshots/06_dpa_sqlite_dwh.png) |
+
+*Exécution du pipeline ETL (logs Extract / Transform / Load) :*
+
+![Exécution Pipeline ETL](../docs/screenshots/05_dpa_pipeline_execution.png)
+
+*Base DWH SQLite — supply_chain_dwh (DBeaver) :*
+
+![Base DWH SQLite](../docs/screenshots/06_dpa_sqlite_dwh.png)
 
 ### Architecture Infra (Cloud)
 ```mermaid
@@ -249,10 +254,16 @@ cd src
 3. **Action:** Construction de Dashboard et exports métier sur l'activité des "Gares".
 
 ### Captures d'Écran
-| Vue | Description | Capture |
-| --- | --- | --- |
-| **Exécution Pipeline** | Logs Extract / Transform / Load | ![05](../docs/screenshots/05_dpa_pipeline_execution.png) |
-| **Base DWH** | supply_chain_dwh.sqlite (DBeaver) | ![06](../docs/screenshots/06_dpa_sqlite_dwh.png) |
+
+**Exécution Pipeline** — Logs Extract / Transform / Load lors du lancement de `main_pipeline.py` :
+
+![Exécution Pipeline ETL](../docs/screenshots/05_dpa_pipeline_execution.png)
+
+---
+
+**Base DWH SQLite** — Vue de la base `supply_chain_dwh.sqlite` dans DBeaver (tables `fact_transactions`, `aggr_daily_site_stats`) :
+
+![Base DWH SQLite](../docs/screenshots/06_dpa_sqlite_dwh.png)
 
 > 💡 Captures dans `docs/screenshots/` — Convention : voir `../docs/screenshots/README.md`
 
