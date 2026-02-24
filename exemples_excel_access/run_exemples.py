@@ -1,17 +1,30 @@
 """
 Exemples d'utilisation Excel et Access dans le projet CAMRAIL.
-À exécuter depuis la racine du projet : python exemples_excel_access/run_exemples.py
+À exécuter depuis la racine du projet :
+
+  pip install -r exemples_excel_access/requirements.txt
+  python exemples_excel_access/run_exemples.py
+
+Les fichiers générés sont dans exemples_excel_access/output/
 """
 import os
 import sys
+import logging
 
-# Ajouter le chemin du projet
+# Configurer le logging (équivalent loguru, sans dépendance externe)
+logging.basicConfig(level=logging.INFO, format="%(message)s")
+logger = logging.getLogger(__name__)
+
+# Chemin racine du projet et utils DPA
 root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 dpa_utils = os.path.join(root, "Data-Pipeline-Automation", "utils")
 if dpa_utils not in sys.path:
     sys.path.insert(0, dpa_utils)
 
-from loguru import logger
+
+def _log_success(msg):
+    """Affiche un message de succès (style loguru.success)."""
+    logging.info(msg)
 
 def exemple_1_export_excel():
     """Exemple 1 : Export du DWH SQLite vers Excel (reporting)"""
@@ -25,10 +38,11 @@ def exemple_1_export_excel():
     if not os.path.exists(db_path):
         logger.warning("⚠️ Exécutez d'abord le pipeline DPA : python Data-Pipeline-Automation/src/main_pipeline.py")
         return
-    
+
+    os.makedirs(os.path.dirname(excel_path), exist_ok=True)
     from excel_utils import export_dwh_to_excel
     export_dwh_to_excel(db_path, excel_path)
-    logger.success(f"✅ Rapport Excel créé : {excel_path}")
+    _log_success(f"✅ Rapport Excel créé : {excel_path}")
 
 
 def exemple_2_modele_erp_excel():
@@ -42,7 +56,7 @@ def exemple_2_modele_erp_excel():
     
     from excel_utils import export_erp_excel_template
     export_erp_excel_template(output_path, num_rows=50)
-    logger.success(f"✅ Modèle créé : {output_path}")
+    _log_success(f"✅ Modèle créé : {output_path}")
     logger.info("💡 Les opérationnels peuvent saisir les transactions dans ce fichier.")
 
 
@@ -64,7 +78,7 @@ def exemple_3_lecture_excel():
     df = read_excel(excel_path, sheet_name="Transactions")
     logger.info(f"📊 Feuille 'Transactions' : {len(df)} lignes")
     logger.info(f"   Colonnes : {list(df.columns)}")
-    logger.success("✅ Lecture Excel OK")
+    _log_success("✅ Lecture Excel OK")
 
 
 def exemple_4_pipeline_avec_excel():
@@ -101,7 +115,7 @@ def exemple_4_pipeline_avec_excel():
     excel_out = os.path.join(root, "exemples_excel_access", "output", "rapport_final.xlsx")
     os.makedirs(os.path.dirname(excel_out), exist_ok=True)
     load_data(df_transac, df_stats, db_path, schema_path, export_excel_path=excel_out)
-    logger.success(f"✅ Pipeline avec Excel terminé : {excel_out}")
+    _log_success(f"✅ Pipeline avec Excel terminé : {excel_out}")
 
 
 def exemple_5_access():
@@ -124,7 +138,7 @@ def exemple_5_access():
             return
         
         df = read_access_table(access_path, "Transactions")
-        logger.success(f"✅ Table lue : {len(df)} lignes")
+        _log_success(f"✅ Table lue : {len(df)} lignes")
     except Exception as e:
         logger.warning(f"⚠️ Access : {e}")
         logger.info("   Le pilote Microsoft Access ODBC doit être installé sur Windows.")
@@ -137,4 +151,4 @@ if __name__ == "__main__":
     exemple_3_lecture_excel()
     exemple_4_pipeline_avec_excel()
     exemple_5_access()
-    logger.success("✅ Tous les exemples terminés. Consultez le dossier output/.")
+    _log_success("✅ Tous les exemples terminés. Consultez le dossier output/.")

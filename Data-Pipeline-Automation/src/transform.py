@@ -10,6 +10,12 @@ def transform_data(api_path, erp_path):
     
     # 1. Nettoyage des données (Standardisation des dates)
     df_transactions['date'] = pd.to_datetime(df_transactions['date'])
+
+    # Harmonisation du type machine_id pour éviter float vs object au merge (ex. source Excel)
+    if 'machine_id' in df_transactions.columns:
+        df_transactions['machine_id'] = df_transactions['machine_id'].astype(str)
+    if 'machine_id' in df_machines.columns:
+        df_machines['machine_id'] = df_machines['machine_id'].astype(str)
     
     # 2. Jointure (Merge) des données transactionnelles avec le référentiel machine
     logger.info("🔗 Jointure des tables transactionnelles et référentielles...")

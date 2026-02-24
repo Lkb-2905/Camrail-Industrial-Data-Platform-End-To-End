@@ -1,0 +1,7 @@
+# Dépendances pour exemples_excel_access (Excel / Access)
+# À installer depuis la racine du projet : pip install -r exemples_excel_access/requirements.txt
+pandas>=2.0.0
+openpyxl>=3.1.0
+sqlalchemy>=2.0.0
+loguru>=0.7.0
+pyodbc>=5.0.0

@@ -94,75 +94,63 @@ flowchart TD
 
 **Résultat visuel — Dashboard en action :**
 
-*Vue générale — OPÉRATION NOMINALE (valeurs nominales) :*
+Les trois captures ci-dessous s'affichent directement dans le README.
+
+**1. Vue générale** — OPÉRATION NOMINALE (valeurs nominales) :
 
 ![Dashboard Streamlit — Vue générale](../docs/screenshots/01_cidp_dashboard_vue_generale.png)
 
-*Cas alerte — DANGER DÉTECTÉ (bannière rouge, Vibrations/Température élevées) :*
+**2. Cas alerte** — DANGER DÉTECTÉ (bannière rouge, Vibrations/Température élevées) :
 
 ![Dashboard Streamlit — Cas alerte](../docs/screenshots/02_cidp_dashboard_alerte_danger.png)
 
-*Dépannage — Erreur ReadTimeout si l'API Flask n'est pas démarrée :*
+**3. Dépannage** — Erreur ReadTimeout si l'API Flask n'est pas démarrée sur le port 5000 :
 
 ![Dashboard — Erreur ReadTimeout](../docs/screenshots/09_cidp_dashboard_error_timeout.png)
 
 ### Architecture Infra (Cloud)
 
-### Diagramme de Flux
+Vue d’ensemble du déploiement sur Microsoft Azure (AKS, PostgreSQL, CI/CD).
+
+#### Diagramme de flux
+
 ```mermaid
-graph TD
-    subgraph Client Layer
-        U[👤 Opérateur Logistique]
-        P[BI Dashboard Live]
-        U -->|Pilotage| P
+flowchart LR
+    subgraph Client
+        U[👤 Opérateur]
+        P[BI Dashboard]
+        U --> P
     end
 
-    subgraph Azure DevOps CI/CD
-        AZ[Pipeline Azure<br>Build, Test, Push]
+    subgraph CICD["Azure DevOps CI/CD"]
+        AZ[Build · Test · Push]
     end
 
-    subgraph Azure Kubernetes Service (AKS)
-        K[Apache Kafka Broker]
-        O[Microservice Consumer ETL]
-        PR[Prometheus SRE]
-        GF[Grafana Dashboards]
-        M[API Flask ML Predict]
-        
-        K -->|Consumer Topic| O
-        M -->|Exposition /metrics| PR
-        PR -->|Data Source| GF
+    subgraph AKS["Azure Kubernetes Service"]
+        K[Kafka]
+        O[Consumer ETL]
+        M[API Flask ML]
+        PR[Prometheus]
+        GF[Grafana]
+        K --> O
+        M --> PR --> GF
     end
 
-    subgraph Infrastructure
-        TF[Terraform IaC]
-        AZ --> TF
-        TF -.->|Provisioning| K
-        TF -.->|Deploy| D
+    subgraph Infra
+        TF[Terraform]
     end
 
-    subgraph Data Sources
-        S[Capteurs IoT Trains]
+    subgraph Data
+        S[Capteurs IoT]
+        D[(PostgreSQL)]
     end
 
-    subgraph Cloud Postgres DB
-        D[(PostgreSQL Flexible<br>Data Warehouse)]
-    end
-
-    S -->|Producteur Kafka| K
-    O -->|Bulk Upsert| D
-    D -->|Lecture DB| M
-    M -->|JSON Response| P
-
-    style P fill:#4FC3F7,color:#000
-    style K fill:#FF9800,color:#fff
-    style O fill:#4CAF50,color:#fff
-    style M fill:#FFD600,color:#000
-    style D fill:#336791,color:#fff
-    style S fill:#FF5252,color:#fff
-    style PR fill:#E6522C,color:#fff
-    style GF fill:#F46800,color:#fff
-    style AZ fill:#0078D7,color:#fff
-    style TF fill:#844FBA,color:#fff
+    S --> K
+    O --> D
+    D --> M
+    M --> P
+    AZ --> TF
+    TF --> AKS
 ```
 
 ### Flux de Données Détaillé
@@ -279,25 +267,27 @@ python run_platform.py
 
 ### Captures d'Écran
 
-**Vue générale** — Dashboard nominal (OPÉRATION NOMINALE) :
+Chaque capture est affichée ci-dessous avec sa légende.
+
+**01 — Vue générale** — Dashboard nominal (OPÉRATION NOMINALE) :
 
 ![Dashboard CIDP — Vue générale](../docs/screenshots/01_cidp_dashboard_vue_generale.png)
 
 ---
 
-**Cas alerte** — DANGER DÉTECTÉ (bannière rouge) :
+**02 — Cas alerte** — DANGER DÉTECTÉ (bannière rouge) :
 
 ![Dashboard CIDP — Cas alerte](../docs/screenshots/02_cidp_dashboard_alerte_danger.png)
 
 ---
 
-**Bootstrap + API** — Terminal : démarrage de `bootstrap_local.py` et API Flask :
+**04 — Bootstrap + API** — Terminal : démarrage de `bootstrap_local.py` et API Flask :
 
 ![Bootstrap et démarrage API Flask](../docs/screenshots/04_cidp_bootstrap_api_demarrage.png)
 
 ---
 
-**Dépannage** — Erreur ReadTimeout si l'API n'est pas démarrée sur le port 5000 :
+**09 — Dépannage** — Erreur ReadTimeout si l'API n'est pas démarrée sur le port 5000 :
 
 ![Erreur ReadTimeout — API non démarrée](../docs/screenshots/09_cidp_dashboard_error_timeout.png)
 

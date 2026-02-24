@@ -92,71 +92,57 @@ flowchart TD
 
 **Résultat visuel — Pipeline et DWH :**
 
-*Exécution du pipeline ETL (logs Extract / Transform / Load) :*
+Les deux captures ci-dessous s'affichent directement dans le README.
 
-![Exécution Pipeline ETL](../docs/screenshots/05_dpa_pipeline_execution.png)
+**1. Exécution du pipeline ETL** — Logs Extract / Transform / Load lors du lancement de `main_pipeline.py` :
 
-*Base DWH SQLite — supply_chain_dwh (DBeaver) :*
+![Exécution Pipeline ETL — DPA](../docs/screenshots/05_dpa_pipeline_execution.png)
 
-![Base DWH SQLite](../docs/screenshots/06_dpa_sqlite_dwh.png)
+**2. Base DWH SQLite** — Vue de la base `supply_chain_dwh.sqlite` dans DBeaver (tables `fact_transactions`, `aggr_daily_site_stats`) :
+
+![Base DWH SQLite — DBeaver](../docs/screenshots/06_dpa_sqlite_dwh.png)
 
 ### Architecture Infra (Cloud)
+
+Vue d’ensemble du déploiement sur Microsoft Azure (AKS, PostgreSQL, CI/CD).
+
 ```mermaid
-graph TD
-    subgraph Client Layer
-        U[👤 Décideur Supply Chain]
-        P[DBeaver / Dashboard BI]
-        U -->|Pilotage| P
+flowchart LR
+    subgraph Client
+        U[👤 Décideur]
+        P[DBeaver / BI]
+        U --> P
     end
 
-    subgraph Azure DevOps CI/CD
-        AZ[Pipeline Azure<br>Build, Test, Push]
+    subgraph CICD["Azure DevOps CI/CD"]
+        AZ[Build · Test · Push]
     end
 
-    subgraph Azure Kubernetes Service (AKS)
-        K[Apache Kafka Cluster]
-        E[Extracteur API JSON]
-        T[Transformateur Pandas]
-        L[Worker SQLAlchemy]
-        PR[Prometheus SRE]
-        GF[Grafana Dashboards]
-        K -->|Consumer Topic| E
-        E -->|Nettoyage| T
-        T -->|Manipulation| L
-        L -->|Metriques Santé| PR
-        PR -->|Data Source| GF
+    subgraph AKS["Azure Kubernetes Service"]
+        K[Kafka]
+        E[Extracteur]
+        T[Transformateur]
+        L[Worker SQL]
+        PR[Prometheus]
+        GF[Grafana]
+        K --> E --> T --> L
+        L --> PR --> GF
     end
 
-    subgraph Infrastructure
-        TF[Terraform IaC]
-        AZ --> TF
-        TF -.->|Provisioning| K
-        TF -.->|Deploy| D
+    subgraph Infra
+        TF[Terraform]
     end
 
-    subgraph Data Sources
-        S[Terminaux Logistiques Fret]
+    subgraph Data
+        S[Terminaux Fret]
+        D[(PostgreSQL)]
     end
 
-    subgraph Cloud PostgreSQL
-        D[(Azure PostgreSQL<br>Data Warehouse)]
-    end
-
-    S -->|Producteur Kafka| K
-    L -->|Upsert SQL/Bulk| D
-    D -->|Requêtes Analytiques| P
-
-    style P fill:#4FC3F7,color:#000
-    style K fill:#FF9800,color:#fff
-    style E fill:#4CAF50,color:#fff
-    style T fill:#4CAF50,color:#fff
-    style L fill:#4CAF50,color:#fff
-    style D fill:#336791,color:#fff
-    style S fill:#FF5252,color:#fff
-    style PR fill:#E6522C,color:#fff
-    style GF fill:#F46800,color:#fff
-    style AZ fill:#0078D7,color:#fff
-    style TF fill:#844FBA,color:#fff
+    S --> K
+    L --> D
+    D --> P
+    AZ --> TF
+    TF --> AKS
 ```
 
 ### Flux de Données Détaillé
@@ -242,7 +228,7 @@ cd src
 
 **Accès Immédiat :** Les tables historiques sont fraîches et disponibles instantanément dans `database/supply_chain_dwh.sqlite`. L'export Excel est généré automatiquement dans `reports/rapport_supply_chain.xlsx`.
 
-> 💡 **Excel / Access :** Exemples et cas d'usage dans `../exemples_excel_access/`.
+> 💡 **Excel / Access :** Exemples et cas d'usage dans `exemples_excel_access/`. Depuis la racine du projet : `pip install -r exemples_excel_access/requirements.txt` puis `python exemples_excel_access/run_exemples.py`. Les sorties sont dans `exemples_excel_access/output/`.
 
 ---
 
@@ -255,15 +241,17 @@ cd src
 
 ### Captures d'Écran
 
-**Exécution Pipeline** — Logs Extract / Transform / Load lors du lancement de `main_pipeline.py` :
+Chaque capture est affichée ci-dessous avec sa légende.
 
-![Exécution Pipeline ETL](../docs/screenshots/05_dpa_pipeline_execution.png)
+**1. Exécution Pipeline ETL** — Logs Extract / Transform / Load lors du lancement de `main_pipeline.py` :
+
+![Exécution Pipeline ETL — DPA](../docs/screenshots/05_dpa_pipeline_execution.png)
 
 ---
 
-**Base DWH SQLite** — Vue de la base `supply_chain_dwh.sqlite` dans DBeaver (tables `fact_transactions`, `aggr_daily_site_stats`) :
+**2. Base DWH SQLite** — Vue de la base `supply_chain_dwh.sqlite` dans DBeaver (tables `fact_transactions`, `aggr_daily_site_stats`) :
 
-![Base DWH SQLite](../docs/screenshots/06_dpa_sqlite_dwh.png)
+![Base DWH SQLite — DBeaver](../docs/screenshots/06_dpa_sqlite_dwh.png)
 
 > 💡 Captures dans `docs/screenshots/` — Convention : voir `../docs/screenshots/README.md`
 
@@ -273,7 +261,7 @@ cd src
 
 ### Standards de Code
 * **Modularité (Engine) :** Couches E, T, et L isolées nativement.
-* **Typage (Data) :** Cast structurés au sein des Dataframes.
+* **Typage (Data) :** Cast structurés au sein des Dataframes ; harmonisation des types (ex. `machine_id` en string) pour compatibilité source Excel au merge.
 * **Error Handling :** Blocs robustes limitant l'écrasement bdd en cas de corruption.
 
 ### Métriques d'Excellence

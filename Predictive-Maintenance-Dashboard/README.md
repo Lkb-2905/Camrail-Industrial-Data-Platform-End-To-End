@@ -93,74 +93,58 @@ flowchart TD
 
 **Résultat visuel — Workflow ML :**
 
-*Génération des données (data_generator / data_processing) :*
+Les deux captures ci-dessous s'affichent directement dans le README.
+
+**07 — Génération des données** — Exécution de `data_generator.py` et `data_processing.py` :
 
 ![Génération données PM-D](../docs/screenshots/07_pmd_generation_donnees.png)
 
-*Entraînement du modèle (model_training — classification report, accuracy) :*
+**08 — Entraînement du modèle** — Exécution de `model_training.py` (classification report, accuracy) :
 
 ![Entraînement modèle Random Forest](../docs/screenshots/08_pmd_model_training.png)
 
 ### Architecture Infra (Cloud)
+
+Vue d’ensemble du déploiement sur Microsoft Azure (AKS, PostgreSQL, CI/CD).
+
 ```mermaid
-graph TD
-    subgraph Client Layer
-        U[👤 Opérateur Logistique]
-        P[Power BI Dashboard]
-        U -->|Pilotage| P
+flowchart LR
+    subgraph Client
+        U[👤 Opérateur]
+        P[Power BI]
+        U --> P
     end
 
-    subgraph Azure DevOps CI/CD
-        AZ[Pipeline Azure<br>Build, Test, Push]
+    subgraph CICD["Azure DevOps CI/CD"]
+        AZ[Build · Test · Push]
     end
 
-    subgraph Azure Kubernetes Service (AKS)
-        G[Générateur Télémétrie]
-        K[Kafka Message Broker]
-        T[Worker Python ETL]
-        PR[Prometheus SRE]
-        GF[Grafana Dashboards]
-        G -->|Producer| K
-        K -->|Consumer| T
-        PR -->|Data Source| GF
+    subgraph AKS["Azure Kubernetes Service"]
+        G[Générateur]
+        K[Kafka]
+        T[Worker ETL]
+        M[IA Engine]
+        PR[Prometheus]
+        GF[Grafana]
+        G --> K --> T
+        M --> PR --> GF
     end
 
-    subgraph Infrastructure
-        TF[Terraform IaC]
-        AZ --> TF
-        TF -.->|Provisioning| K
-        TF -.->|Deploy| D
+    subgraph Infra
+        TF[Terraform]
     end
 
-    subgraph Data Sources
-        S[Capteurs Locomotives Moteur]
+    subgraph Data
+        S[Capteurs]
+        D[(PostgreSQL)]
     end
 
-    subgraph Intelligence Layer
-        M[IA Engine<br>Random Forest]
-    end
-
-    subgraph Cloud PostgreSQL
-        D[(Azure Postgres<br>Warehouse Analytics)]
-    end
-
-    S -->|Signaux IoT Bruts| G
-    T -->|Variables temporelles| D
-    D -->|Lecture via SQL| M
-    M -->|Alertes Santé AI| PR
-    M -->|Score d'Anomalie| P
-
-    style P fill:#4FC3F7,color:#000
-    style K fill:#FF9800,color:#fff
-    style G fill:#4CAF50,color:#fff
-    style T fill:#4CAF50,color:#fff
-    style M fill:#FFD600,color:#000
-    style S fill:#FF5252,color:#fff
-    style D fill:#336791,color:#fff
-    style PR fill:#E6522C,color:#fff
-    style GF fill:#F46800,color:#fff
-    style AZ fill:#0078D7,color:#fff
-    style TF fill:#844FBA,color:#fff
+    S --> G
+    T --> D
+    D --> M
+    M --> P
+    AZ --> TF
+    TF --> AKS
 ```
 
 ### Flux de Données Détaillé
@@ -255,13 +239,15 @@ cd src
 
 ### Captures d'Écran
 
-**Génération des données** — Exécution de `data_generator.py` et `data_processing.py` :
+Chaque capture est affichée ci-dessous avec sa légende.
+
+**07 — Génération des données** — Exécution de `data_generator.py` et `data_processing.py` :
 
 ![Génération données PM-D](../docs/screenshots/07_pmd_generation_donnees.png)
 
 ---
 
-**Entraînement du modèle** — Exécution de `model_training.py` (classification report, accuracy) :
+**08 — Entraînement du modèle** — Exécution de `model_training.py` (classification report, accuracy) :
 
 ![Entraînement modèle Random Forest](../docs/screenshots/08_pmd_model_training.png)
 

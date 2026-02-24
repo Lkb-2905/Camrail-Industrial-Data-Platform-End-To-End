@@ -15,9 +15,18 @@ Intégration **Excel** et **Microsoft Access** pour répondre aux besoins des é
 
 ## 🚀 Installation
 
+À exécuter depuis la **racine du projet** :
+
 ```powershell
 cd "c:\Users\pc\Desktop\projet CAMRAIL"
-pip install openpyxl pyodbc pandas loguru
+pip install -r exemples_excel_access/requirements.txt
+```
+
+Avec **pyenv** (Python 3.12) :
+
+```powershell
+cd "c:\Users\pc\Desktop\projet CAMRAIL"
+& "$env:USERPROFILE\.pyenv\pyenv-win\versions\3.12.10\python.exe" -m pip install -r exemples_excel_access/requirements.txt
 ```
 
 ---
@@ -71,12 +80,21 @@ df = read_access_table("data/erp.accdb", "Transactions")
 
 ## ▶️ Lancer tous les exemples
 
+Depuis la racine du projet, après avoir installé les dépendances (voir [Installation](#-installation)) :
+
 ```powershell
 cd "c:\Users\pc\Desktop\projet CAMRAIL"
+pip install -r exemples_excel_access/requirements.txt
 python exemples_excel_access/run_exemples.py
 ```
 
-Les fichiers générés sont dans `exemples_excel_access/output/`.
+Avec pyenv :
+
+```powershell
+& "$env:USERPROFILE\.pyenv\pyenv-win\versions\3.12.10\python.exe" exemples_excel_access/run_exemples.py
+```
+
+Le dossier `output/` est créé automatiquement si nécessaire. Les fichiers générés sont dans **`exemples_excel_access/output/`**.
 
 ---
 
