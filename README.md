@@ -3,7 +3,7 @@
 
 ![Power BI](https://img.shields.io/badge/Power_BI-Dashboards_Professionnels-yellow) ![DAX](https://img.shields.io/badge/DAX-Métriques_Avancées-orange) ![Power Query](https://img.shields.io/badge/Power_Query-ETL_Connecteur-blue) ![Data Engineering](https://img.shields.io/badge/Data_Engineering-Star_Schema-green)
 
-> ⚠️ **NB IMPORTANT :** Il s'agit juste d'un projet personnel/étudiant où vous avez utilisé le nom de "Camrail" pour rendre le projet plus réaliste (sans utiliser de vraies données privées il s'agit simplement d'un document fictif que vous avez créé de toutes pièces pour simuler un projet de Data Engineer étudiant.
+> ⚠️ **NB IMPORTANT** : *Il s'agit d'un projet personnel/étudiant. Le nom "Camrail" est utilisé uniquement pour donner un contexte industriel réaliste à cette simulation. Aucune donnée réelle ou privée n'est exploitée. Tous les documents, architectures et données présentés ici sont intégralement fictifs et créés de toutes pièces pour simuler un projet académique de Data Engineering.*
 
 **Version:** 3.0.0 Enterprise | **Date:** Février 2026  
 **Auteur:** KAMENI TCHOUATCHEU GAETAN BRUNEL  
