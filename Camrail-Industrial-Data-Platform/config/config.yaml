@@ -8,7 +8,8 @@ model:
   registry_dir: "models"
   latest_name: "latest.pkl"
 api:
-  host: "127.0.0.1"
+  # 0.0.0.0 = accessible depuis Streamlit (localhost) ET Prometheus (Docker via host.docker.internal)
+  host: "0.0.0.0"
   port: 5000
 kafka:
   topic: "train_telemetry"

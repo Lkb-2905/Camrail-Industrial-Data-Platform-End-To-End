@@ -158,8 +158,8 @@ flowchart LR
 2. **Déploiement CI/CD** : Toute modification Master déclenche Azure DevOps qui compile l'image Docker, exécute `Pytest` et déploie le YAML sur AKS.
 3. **Architecture Distribuée (K8s)** : Les pods ETL capturent les évènements Kafka et l'A.I API lit depuis la base Azure.
 4. **Mode Local (Bootstrap)** : En absence de PostgreSQL/Kafka, `bootstrap_local.py` entraîne le modèle depuis les CSV (`data/sensors.csv`, `data/maintenance.csv`) et génère `models/latest.pkl`, permettant à l'API et au Dashboard Streamlit de fonctionner en autonomie.
-5. **Monitoring Ops (Grafana)** : Prometheus scrape les métriques (`/metrics`) du conteneur ML, que Grafana expose sous forme de Dashboard exécutif temps réel.
-6. **Diffusion Live** : Dashboard Streamlit (port 8501) appelle l'API (port 5000) avec authentification `X-API-KEY` pour afficher les prédictions en temps réel.
+5. **Monitoring Ops (Grafana)** : L'API (conteneur Docker) expose `/metrics`. Prometheus scrape `api:5000`, Grafana affiche les dashboards SRE.
+6. **Diffusion Live** : Dashboard Streamlit (port 8501) appelle l'API (port 5000, conteneur ou hôte) avec authentification `X-API-KEY` pour afficher les prédictions en temps réel.
 
 ---
 
@@ -173,6 +173,14 @@ flowchart LR
 | **Intelligence Artificielle**| Scikit-Learn | Latest | Algorithmes Random Forest industriels pour la maintenance prédictive. |
 | **Orchestration & DevOps**| Kubernetes (AKS) | Latest | Auto-scaling des Pods API et des Workers Kafka via CI/CD Azure Pipelines. |
 | **Dashboard Interactif** | Streamlit | Latest | Interface de démo temps réel avec sliders (Débit, Pression, Vibration, Température) et appel API sécurisé. |
+
+### Fichiers clés (Mode Docker)
+| Fichier | Rôle |
+| --- | --- |
+| `docker-compose.yml` | API, Kafka, PostgreSQL, Prometheus, Grafana |
+| `Dockerfile.api` | Image de l'API Flask (bootstrap incluse) |
+| `prometheus.yml` | Ciblage de l'API (`api:5000`) pour le scraping |
+| `demarrer_visualisation.ps1` | Lance Docker + Streamlit en une commande |
 
 ### Bibliothèques Complémentaires
 * **Loguru :** Remplacement intelligent du standard logger pour une traccabilité magistrale.
@@ -196,6 +204,9 @@ flowchart LR
 **Dashboard Streamlit**
 * Interface "Camrail Live Monitor" (localhost:8501) avec outil de test manuel : sliders pour simuler la télémétrie, bouton "Interroger l'API Neural Network", affichage "OPÉRATION NOMINALE" ou "DANGER DÉTECTÉ" selon les prédictions.
 
+**Analyse de Données via Excel**
+* Intégration d'un [fichier source Excel en ligne](https://etesiea-my.sharepoint.com/:x:/g/personal/gaetanbrunel_kamenitchouatcheu_et_esiea_fr/IQBMls0pJmlwRK5wA538pUw6AeIddCJBugNj-f_HbOed8Go?e=mPZh6s) (`data/source_donnees.xlsx` en local) permettant l'analyse, le traitement et la collecte de données brutes directement depuis des feuilles de calcul.
+
 **Mécanismes SRE (Site Reliability Engineering)**
 * Alerting Prometheus actif bloquant l'API si le modèle de Machine Learning diverge ou tombe en latence.
 
@@ -212,9 +223,11 @@ flowchart LR
 ## 🚀 DÉMARRAGE RAPIDE
 
 ### Prérequis
-* Docker Desktop & Kubernetes (mode Cloud)
-* Terraform Azure CLI (`az`) (mode Cloud)
-* Python (v3.12+ pour le mode local)
+| Mode | Prérequis |
+| --- | --- |
+| **Mode Local (API + Streamlit)** | Python 3.12+, pip, pyenv (recommandé) |
+| **Mode Complet (Docker)** | Docker Desktop en cours d'exécution, Python 3.12+ pour Streamlit |
+| **Mode Cloud** | Terraform, Azure CLI (`az`), Kubernetes |
 
 ### Déploiement Architecte (Cloud Microsoft Azure)
 ```bash
@@ -251,10 +264,60 @@ cd "c:\Users\pc\Desktop\projet CAMRAIL\Camrail-Industrial-Data-Platform"
 * API : **http://127.0.0.1:5000** (GET `/health`, POST `/predict` avec header `X-API-KEY: entreprise_secret_key_2026`)
 * Dashboard : **http://localhost:8501** — Camrail Live Monitor (la clé API est transmise automatiquement par le Dashboard)
 
-### Lancement Mode Complet (PostgreSQL + Kafka)
-```bash
-python run_platform.py
+### Lancement Mode Complet (Docker : API + Grafana + Prometheus + Kafka + PostgreSQL)
+
+> **Architecture Docker :** L'API Flask est conteneurisée (`Dockerfile.api`) et tourne avec Prometheus, Grafana, Kafka et PostgreSQL. Seul Streamlit s'exécute sur la machine hôte.
+
+```powershell
+# 1. Depuis la racine du projet CAMRAIL :
+docker-compose -f Camrail-Industrial-Data-Platform\docker-compose.yml up -d --build
+
+# 2. Depuis Camrail-Industrial-Data-Platform — Lancer Streamlit (Terminal séparé)
+cd "C:\Users\pc\Desktop\projet CAMRAIL\Camrail-Industrial-Data-Platform"
+& "$env:USERPROFILE\.pyenv\pyenv-win\versions\3.12.10\python.exe" -m streamlit run dashboard/app.py
 ```
+
+**Ou en une commande (depuis le dossier CIDP) :**
+```powershell
+cd "C:\Users\pc\Desktop\projet CAMRAIL\Camrail-Industrial-Data-Platform"
+.\demarrer_visualisation.ps1
+```
+
+**Accès aux services :**
+| Service | URL | Identifiants |
+| --- | --- | --- |
+| Dashboard Streamlit | http://localhost:8501 | — |
+| API Flask | http://127.0.0.1:5000 | `X-API-KEY: entreprise_secret_key_2026` |
+| **Grafana** | **http://localhost:3000** | `admin` / `camrail_admin_2026` |
+| Prometheus | http://localhost:9090 | — |
+
+### 👁️ Visualisation simultanée : Streamlit + Grafana + Prometheus
+
+**Objectif :** Voir les résultats en temps réel dans les 3 interfaces à la fois.
+
+```
+  [Streamlit 8501]  →  clic "Interroger l'API"  →  [API Docker 5000]
+                                                           ↓
+                                              expose /metrics (Prometheus)
+                                                           ↓
+                                              [Prometheus 9090] scrape api:5000
+                                                           ↓
+                                              [Grafana 3000] dashboards SRE
+```
+
+**Étapes :**
+1. Lancer `demarrer_visualisation.ps1` ou `docker-compose up -d --build` + Streamlit
+2. Ouvrir **Streamlit** (8501), **Grafana** (3000), **Prometheus** (9090) dans 3 onglets
+3. Faire **5 à 10 prédictions** sur Streamlit (sliders + bouton "Interroger l'API Neural Network")
+4. Les graphiques Grafana se remplissent sous 5–10 secondes (dashboard "SRE Camrail Predict")
+
+| Interface | URL | Contenu |
+| --- | --- | --- |
+| **Streamlit** | http://localhost:8501 | Prédictions temps réel (OPÉRATION NOMINALE / DANGER DÉTECTÉ) |
+| **Grafana** | http://localhost:3000 | Latence ML, alertes IA (admin / camrail_admin_2026) |
+| **Prometheus** | http://localhost:9090 | Requête : `api_prediction_latency_seconds_count` |
+
+**Dépannage Grafana "No data" :** Les métriques n'existent qu'après des appels à `/predict`. Faites des prédictions depuis Streamlit, puis patientez 5–10 secondes. Vérifiez dans Prometheus que la requête `up{job="camrail_api"}` retourne `1`.
 
 ---
 
@@ -281,7 +344,19 @@ Chaque capture est affichée ci-dessous avec sa légende.
 
 ---
 
-**04 — Bootstrap + API** — Terminal : démarrage de `bootstrap_local.py` et API Flask :
+**03 — Analyse de données Excel** — Source des données brutes (Feuille 1) :
+
+![Analyse Excel — Feuille 1](excel_screenshot_1.png)
+
+---
+
+**04 — Analyse de données Excel** — Source des données brutes (Feuille 2) :
+
+![Analyse Excel — Feuille 2](excel_screenshot_2.png)
+
+---
+
+**05 — Bootstrap + API** — Terminal : démarrage de `bootstrap_local.py` et API Flask :
 
 ![Bootstrap et démarrage API Flask](../docs/screenshots/04_cidp_bootstrap_api_demarrage.png)
 
@@ -315,11 +390,11 @@ Chaque capture est affichée ci-dessous avec sa légende.
 **Version Actuelle : 3.0.0 (Enterprise V3) ✅**
 * Architecture streaming IoT globale (**Apache Kafka**).
 * Socle Cloud Native via **Microsoft Azure Kubernetes Service (AKS)**.
-* Déploiement Data Engineer Zero-Touch par Infrastructure As Code (**Terraform**).
-* CI/CD Intégral : Sécurité et Build poussés via **Azure Pipelines**.
-* Observabilité exécutif (Dashboarding) assuré conjointement par **Grafana / Prometheus**.
+* **API conteneurisée** : `Dockerfile.api` + `docker-compose` (API, Grafana, Prometheus, Kafka, PostgreSQL).
+* Observabilité : **Grafana / Prometheus** — dashboards SRE provisionnés automatiquement.
 * **Mode Local Bootstrap** : Exécution autonome sans PostgreSQL/Kafka.
 * **Dashboard Streamlit** : Interface de démo avec authentification API intégrée.
+* Script `demarrer_visualisation.ps1` : lancement en une commande (Docker + Streamlit).
 
 **Version 3.0.0 (Vision Long Terme) 🔮**
 * Implémentation complète Digital Twin (Jumeau Numérique 3D) couplé aux flux Kafka temps réel.

@@ -1,0 +1,20 @@
+# API Flask Camrail - pour monitoring Grafana/Prometheus
+FROM python:3.12-slim
+
+WORKDIR /app
+
+# Dépendances minimales pour l'API
+RUN pip install --no-cache-dir Flask joblib pandas pydantic prometheus_client python-dotenv loguru scikit-learn pyyaml
+
+COPY api/ ./api/
+COPY src/ ./src/
+COPY config/ ./config/
+COPY data/ ./data/
+COPY bootstrap_local.py .
+
+# Bootstrap du modèle (requis pour l'API)
+RUN python bootstrap_local.py
+
+EXPOSE 5000
+
+CMD ["python", "api/api.py"]

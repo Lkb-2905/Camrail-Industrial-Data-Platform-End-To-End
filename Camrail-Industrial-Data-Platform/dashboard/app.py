@@ -24,7 +24,8 @@ temperature = st.sidebar.slider("Température (°C)", 20.0, 120.0, 45.0)
 
 if st.sidebar.button("⚙️ Interroger l'API Neural Network"):
     # Requête HTTP vers le serveur backend qui écoute sur 5000 (Désigné dans .env)
-    url = f"http://{config['api']['host']}:5000/predict"
+    # Toujours localhost : Streamlit et API tournent sur la même machine
+    url = "http://127.0.0.1:5000/predict"
     payload = {
         "loco_id": loco_id,
         "flow_rate": flow_rate,
