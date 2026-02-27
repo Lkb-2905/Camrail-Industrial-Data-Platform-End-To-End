@@ -108,5 +108,5 @@ Write-Host "🚀 Flotte Data Streaming Fallback déployée. Brokers ZooKeeper s�
 ![Entraînement modèle ML](../docs/screenshots/08_pmd_model_training.png)
 
 ---
-Ce projet est Confidentiel. Réservé à un usage académique et professionnel rigoureux.  
+Ce projet est réservé à un usage académique et professionnel rigoureux.  
 © 2026 Kameni Tchouatcheu Gaetan Brunel - Tous droits réservés

@@ -120,5 +120,5 @@ api_data, erp_data = extract_from_excel("chemin/vers/transactions.xlsx")
 ✅ **Portabilité :** SQLite + Excel permettent un déploiement sans infrastructure Cloud.
 
 ---
-Ce projet est Confidentiel. Réservé à un usage académique et professionnel rigoureux.  
+Ce projet est réservé à un usage académique et professionnel rigoureux.  
 © 2026 Kameni Tchouatcheu Gaetan Brunel - Tous droits réservés

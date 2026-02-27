@@ -3,6 +3,8 @@
 
 ![Power BI](https://img.shields.io/badge/Power_BI-Dashboards_Professionnels-yellow) ![DAX](https://img.shields.io/badge/DAX-Métriques_Avancées-orange) ![Power Query](https://img.shields.io/badge/Power_Query-ETL_Connecteur-blue) ![Data Engineering](https://img.shields.io/badge/Data_Engineering-Star_Schema-green)
 
+> ⚠️ **NB IMPORTANT :** Il s'agit juste d'un projet personnel/étudiant où vous avez utilisé le nom de "Camrail" pour rendre le projet plus réaliste (sans utiliser de vraies données privées il s'agit simplement d'un document fictif que vous avez créé de toutes pièces pour simuler un projet de Data Engineer étudiant.
+
 **Version:** 3.0.0 Enterprise | **Date:** Février 2026  
 **Auteur:** KAMENI TCHOUATCHEU GAETAN BRUNEL  
 **Contact:** gaetanbrunel.kamenitchouatcheu@et.esiea.fr  
@@ -160,6 +162,17 @@ Intégration d'un [fichier source Excel en ligne](https://etesiea-my.sharepoint.
 **Source des données brutes (Feuille 2)** :
 
 ![Analyse Excel — Feuille 2](Camrail-Industrial-Data-Platform/excel_screenshot_2.png)
+
+---
+
+### 7. Analyse de Données Historiques (MS Access)
+
+* Preuve de Concept (PoC) architecturale : Ingestion de bases de données legacy (`.accdb`) historiques (simulées via `pyodbc`) et versement automatisé dans le Data Warehouse PostgreSQL.
+* Ce module permet d'orchestrer la récupération de données orphelines (ex: fichiers de gestion locaux créés par des équipes métiers) vers des systèmes Cloud modernes.
+
+**Extraction système Legacy** — Démarrage du pipeline ETL de MS Access vers PostgreSQL (Simulation) :
+
+![Pipeline ETL MS Access](Camrail-Industrial-Data-Platform/docs/screenshots/etl_access_screenshot.png)
 
 ---
 

@@ -2,6 +2,8 @@
 # ⚡ PM-D : Predictive Maintenance Dashboard
 ![Terraform](https://img.shields.io/badge/Terraform-AKS_Provisioning-purple) ![AzureDevOps](https://img.shields.io/badge/Azure_DevOps-Automated_Deploy-blue) ![Kubernetes](https://img.shields.io/badge/Kubernetes-Cloud_Cluster-blue) ![Grafana](https://img.shields.io/badge/Grafana-MLOps_Monitoring-orange)
 
+> ⚠️ **NB IMPORTANT :** Il s'agit juste d'un projet personnel/étudiant où vous avez utilisé le nom de "Camrail" pour rendre le projet plus réaliste (sans utiliser de vraies données privées il s'agit simplement d'un document fictif que vous avez créé de toutes pièces pour simuler un projet de Data Engineer étudiant.
+
 **Version:** 1.0.0 Stable | **Date:** Février 2026  
 **Auteur:** KAMENI TCHOUATCHEU GAETAN BRUNEL  
 **Contact:** gaetanbrunel.kamenitchouatcheu@et.esiea.fr  

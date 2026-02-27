@@ -43,9 +43,10 @@ def extract_from_access(db_path: str, table_name: str) -> pd.DataFrame:
         
         # Fallback sur le fichier Excel ou CSV pour que la démo fonctionne tout le temps
         # C'est une excellente pratique de Data Engineering (Fallback Mechanism)
-        fallback_path = "../data/source_donnees.xlsx"
+        import os
+        fallback_path = os.path.join(os.path.dirname(__file__), "../data/source_donnees.xlsx")
         df = pd.read_excel(fallback_path)
-        logger.info(f"Fallback réussi : {len(df)} lignes récupérées depuis le fichier local.")
+        logger.info(f"Fallback réussi : {len(df)} lignes récupérées depuis le fichier source_donnees.xlsx (Simulation Access).")
         return df
 
 def transform_data(df: pd.DataFrame) -> pd.DataFrame:

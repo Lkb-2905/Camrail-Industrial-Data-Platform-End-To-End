@@ -106,5 +106,5 @@ Write-Host "🚀 Flotte Data Streaming Fallback déployée. Brokers ZooKeeper s�
 ✅ **Isolement :** Secrets injectés dans Kubernetes via Azure KeyVault/Secrets natifs, aucune donnée en dur.
 
 ---
-Ce projet est Confidentiel. Réservé à un usage académique et professionnel rigoureux.  
+Ce projet est réservé à un usage académique et professionnel rigoureux.  
 © 2026 Kameni Tchouatcheu Gaetan Brunel - Tous droits réservés
