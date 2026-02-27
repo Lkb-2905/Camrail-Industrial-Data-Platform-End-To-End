@@ -149,6 +149,20 @@ Interface de pilotage connectée à l’API ML pour simuler la télémétrie (D�
 
 ---
 
+### 6. Analyse de Données via Excel
+
+Intégration d'un [fichier source Excel en ligne](https://etesiea-my.sharepoint.com/:x:/g/personal/gaetanbrunel_kamenitchouatcheu_et_esiea_fr/IQBMls0pJmlwRK5wA538pUw6AeIddCJBugNj-f_HbOed8Go?e=mPZh6s) permettant l'analyse, le traitement et la collecte de données brutes directement depuis des feuilles de calcul.
+
+**Source des données brutes (Feuille 1)** :
+
+![Analyse Excel — Feuille 1](Camrail-Industrial-Data-Platform/excel_screenshot_1.png)
+
+**Source des données brutes (Feuille 2)** :
+
+![Analyse Excel — Feuille 2](Camrail-Industrial-Data-Platform/excel_screenshot_2.png)
+
+---
+
 ## 🛠️ TECHNOLOGIES UTILISÉES
 
 | Composant | Technologie | Usage |
