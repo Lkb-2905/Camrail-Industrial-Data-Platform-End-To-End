@@ -204,8 +204,9 @@ flowchart LR
 **Dashboard Streamlit**
 * Interface "Camrail Live Monitor" (localhost:8501) avec outil de test manuel : sliders pour simuler la télémétrie, bouton "Interroger l'API Neural Network", affichage "OPÉRATION NOMINALE" ou "DANGER DÉTECTÉ" selon les prédictions.
 
-**Analyse de Données via Excel**
+**Analyse de Données Historiques (MS Access / Excel)**
 * Intégration d'un [fichier source Excel en ligne](https://etesiea-my.sharepoint.com/:x:/g/personal/gaetanbrunel_kamenitchouatcheu_et_esiea_fr/IQBMls0pJmlwRK5wA538pUw6AeIddCJBugNj-f_HbOed8Go?e=mPZh6s) (`data/source_donnees.xlsx` en local) permettant l'analyse, le traitement et la collecte de données brutes directement depuis des feuilles de calcul.
+* Preuve de Concept (PoC) architecturale : Ingestion de bases de données legacy (`.accdb`) via `pyodbc` pour extraction et versement automatisé dans le Data Warehouse PostgreSQL (voir `src/etl_legacy_access.py`).
 
 **Mécanismes SRE (Site Reliability Engineering)**
 * Alerting Prometheus actif bloquant l'API si le modèle de Machine Learning diverge ou tombe en latence.
